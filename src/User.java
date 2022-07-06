@@ -69,7 +69,7 @@ public class User {
             if ((userName != null) && ((userName.length() > 4))) {
                 break;
             } else {
-                JOptionPane.showMessageDialog(null, "Not accepted ! Please try another one",
+                JOptionPane.showMessageDialog(null, "Not accepted ! Please try another one\nYour username must have at least 5 characters ",
                         "Sign-Up page", JOptionPane.INFORMATION_MESSAGE);
             }
         }
@@ -79,7 +79,7 @@ public class User {
             if ((passWord != null) && ((passWord.length() > 4))) {
                 break;
             } else {
-                JOptionPane.showMessageDialog(null, "Not accepted ! Please try another one",
+                JOptionPane.showMessageDialog(null, "Not accepted ! Please try another one\nYour username must have at least 5 characters ",
                         "Sign-Up page", JOptionPane.INFORMATION_MESSAGE);
             }
         }
