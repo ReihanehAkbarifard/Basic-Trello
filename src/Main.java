@@ -45,7 +45,6 @@ public class Main {
 
                         }
                     }
-                    break;
                 case 2:
                     User.signUp();
                     break;
