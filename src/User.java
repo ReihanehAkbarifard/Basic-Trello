@@ -59,8 +59,8 @@ public class User {
             if ((fullName != null) && (!(fullName.length() == 0)) && (fullName.matches("^[a-zA-Z]*$"))) {
                 break;
             } else {
-                JOptionPane.showInputDialog(null, "Not accepted ! Please try another one",
-                        "Sign-Up page", JOptionPane.QUESTION_MESSAGE);
+                JOptionPane.showMessageDialog(null, "Not accepted ! Please try another one",
+                        "Sign-Up page", JOptionPane.INFORMATION_MESSAGE);
             }
         }
         while (true) {
@@ -69,8 +69,8 @@ public class User {
             if ((userName != null) && ((userName.length() > 4))) {
                 break;
             } else {
-                JOptionPane.showInputDialog(null, "Not accepted ! Please try another one",
-                        "Sign-Up page", JOptionPane.QUESTION_MESSAGE);
+                JOptionPane.showMessageDialog(null, "Not accepted ! Please try another one",
+                        "Sign-Up page", JOptionPane.INFORMATION_MESSAGE);
             }
         }
         while (true){
@@ -79,8 +79,8 @@ public class User {
             if ((passWord != null) && ((passWord.length() > 4))) {
                 break;
             } else {
-                JOptionPane.showInputDialog(null, "Not accepted ! Please try another one",
-                        "Sign-Up page", JOptionPane.QUESTION_MESSAGE);
+                JOptionPane.showMessageDialog(null, "Not accepted ! Please try another one",
+                        "Sign-Up page", JOptionPane.INFORMATION_MESSAGE);
             }
         }
         while (true){
@@ -89,8 +89,8 @@ public class User {
             if ((email != null) && (!(email.length() == 0)) && (email.matches("^[A-Za-z0-9+_.-]+@(.+)$"))) {
                 break;
             } else {
-                JOptionPane.showInputDialog(null, "Not accepted ! Please try another one",
-                        "Sign-Up page", JOptionPane.QUESTION_MESSAGE);
+                JOptionPane.showMessageDialog(null, "Not accepted ! Please try another one",
+                        "Sign-Up page", JOptionPane.INFORMATION_MESSAGE);
             }
         }
 
@@ -139,7 +139,7 @@ public class User {
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
                 JOptionPane.showMessageDialog(null, "Welcome Dear " +
-                        resultSet.getString("fullname"), "Sign-Up page",
+                                resultSet.getString("fullname"), "Sign-Up page",
                         JOptionPane.INFORMATION_MESSAGE);
                 User user = new User(resultSet.getString("fullname"),
                         resultSet.getString("username"), resultSet.getString("password") ,
