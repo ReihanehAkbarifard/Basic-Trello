@@ -56,7 +56,7 @@ public class User {
         while (true) {
             fullName = JOptionPane.showInputDialog(null, "Please Enter Your FullName :",
                     "Sign-Up page", JOptionPane.QUESTION_MESSAGE);
-            if ((fullName != null) && (!(fullName.length() == 0)) && (fullName.matches("^[a-zA-Z]*$"))) {
+            if ((fullName != null) && (!(fullName.length() == 0)) && (fullName.matches("^[A-Za-z\\s]*$"))) {
                 break;
             } else {
                 JOptionPane.showMessageDialog(null, "Not accepted ! Please try another one",
