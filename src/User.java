@@ -6,6 +6,7 @@ public class User {
     private String userID;
     private String passWord;
     private String email;
+    private String bio;
 
 
     public User(String fullName, String userID, String passWord, String email) {
@@ -13,6 +14,38 @@ public class User {
         this.userID = userID;
         this.passWord = passWord;
         this.email = email;
+    }
+
+    public String getFullName() {
+        return fullName;
+    }
+    public String getUserID() {
+        return userID;
+    }
+    public String getPassWord() {
+        return passWord;
+    }
+    public String getEmail() {
+        return email;
+    }
+    public String getBio() {
+        return bio;
+    }
+
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
+    }
+    public void setUserID(String userID) {
+        this.userID = userID;
+    }
+    public void setPassWord(String passWord) {
+        this.passWord = passWord;
+    }
+    public void setEmail(String email) {
+        this.email = email;
+    }
+    public void setBio(String bio) {
+        this.bio = bio;
     }
 
     public static void signUp() throws SQLException {
@@ -94,7 +127,6 @@ public class User {
     public static User logIn() throws SQLException {
         Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/trello?" +
                 "autoReconnect=true&useSSL=false", "root", "");
-        Boolean isFound = false;
         do {
             String userName = JOptionPane.showInputDialog(null ,"Please Enter Your username :",
                     "logIn page" , JOptionPane.QUESTION_MESSAGE);
@@ -110,7 +142,7 @@ public class User {
                         resultSet.getString("fullname"), "Sign-Up page",
                         JOptionPane.INFORMATION_MESSAGE);
                 User user = new User(resultSet.getString("fullname"),
-                        resultSet.getString("userID"), resultSet.getString("password") ,
+                        resultSet.getString("username"), resultSet.getString("password") ,
                         resultSet.getString("email"));
                 return user;
 
@@ -122,6 +154,65 @@ public class User {
         }while (true);
 
     }
+    public void editProfile() throws SQLException {
+        Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/trello?" +
+                "autoReconnect=true&useSSL=false", "root", "");
+        int chosenOpt = Integer.parseInt(JOptionPane.showInputDialog(null, "Please Choose an Option Which You" +
+                        " Want to edit :\n1. username\n2. password\n3 .bio\n4. back" , "Edit Profile",
+                JOptionPane.QUESTION_MESSAGE));
+        switch (chosenOpt){
+            case 1:
+                String newUserName= JOptionPane.showInputDialog(null, "Please Enter your new " +
+                        "name", "Edit username", JOptionPane.QUESTION_MESSAGE);
+                PreparedStatement preparedStatement = connection.prepareStatement("UPDATE users SET username = ? WHERE " +
+                        "username = ?");
+                preparedStatement.setString(1, newUserName);
+                preparedStatement.setString(2, this.getUserID());
+                preparedStatement.executeUpdate();
+                JOptionPane.showMessageDialog(null, "Your username has edited " +
+                        "successfully", "Edit username", JOptionPane.INFORMATION_MESSAGE);
+                setUserID(newUserName);
+                break;
+            case 2:
+                String newPassword= JOptionPane.showInputDialog(null, "Please Enter your new " +
+                        "password", "Edit password", JOptionPane.QUESTION_MESSAGE);
+                preparedStatement = connection.prepareStatement("UPDATE Users SET password = ? WHERE " +
+                        "password = ?");
+                preparedStatement.setString(1, getPassWord());
+                preparedStatement.setString(2, newPassword);
+                JOptionPane.showMessageDialog(null, "Your password has edited " +
+                        "successfully", "Edit password", JOptionPane.INFORMATION_MESSAGE);
+                setPassWord(newPassword);
+                break;
+            case 3:
+                String bio= JOptionPane.showInputDialog(null, "Please Enter your new bio "
+                        , "Edit bio", JOptionPane.QUESTION_MESSAGE);
+                preparedStatement = connection.prepareStatement("UPDATE Users SET bio = ? WHERE " +
+                        "username = ?");
+                preparedStatement.setString(1, bio);
+                preparedStatement.setString(2, getUserID());
+                preparedStatement.executeUpdate();
+                JOptionPane.showMessageDialog(null, "Your bio has edited " +
+                        "successfully", "Edit bio", JOptionPane.INFORMATION_MESSAGE);
+                setBio(bio);
+                break;
+            case 4:
+                break;
+
+        }
+
+    }
+    public void seeProfile() throws SQLException {
+        StringBuilder allInformation = new StringBuilder();
+        if(getBio() == null){
+            bio = " ";
+        }
+        allInformation.append("user name : " + this.userID + "\n").append("full name : " + this.fullName + "\n")
+                .append("email : " + this.email + "\n").append("bio : " + bio + "\n");
+        JOptionPane.showMessageDialog(null , allInformation, "See Profile",
+                JOptionPane.INFORMATION_MESSAGE);
+    }
+
 
 
 }

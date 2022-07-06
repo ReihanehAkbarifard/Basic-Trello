@@ -18,12 +18,23 @@ public class Main {
                     while (isInHomePage) {
                         while (isInHomePage) {
                             chosenOption = Integer.parseInt(JOptionPane.showInputDialog(null,
-                                    "Please choose an option :\n1.WorkSpaces\n2. Edit Profile\n 3.Log Out",
+                                    "Please choose an option :\n1. WorkSpaces\n2. See Profile\n3. Log Out",
                                     "Home page", JOptionPane.QUESTION_MESSAGE));
                             switch (chosenOption) {
                                 case 1:
                                     break;
                                 case 2:
+                                    switch (Integer.parseInt(JOptionPane.showInputDialog(null, "Please choose " +
+                                            "an option :\n1. Show all my detail\n2. Edit Profile\n3. back"))){
+                                        case 1:
+                                            currentUser.seeProfile();
+                                            break;
+                                        case 2:
+                                            currentUser.editProfile();
+                                            break;
+                                        case 3:
+                                            break;
+                                    }
                                     break;
                                 case 3:
                                     isInHomePage = false;
@@ -34,6 +45,13 @@ public class Main {
 
                         }
                     }
+                    break;
+                case 2:
+                    User.signUp();
+                    break;
+                case 3:
+                    isAppRunning = false;
+                    break;
             }
 
         }
