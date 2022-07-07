@@ -213,6 +213,15 @@ public class User {
                 JOptionPane.INFORMATION_MESSAGE);
     }
 
+    public void deleteProfile() throws SQLException {
+        Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/trello?" +
+                "autoReconnect=true&useSSL=false", "root", "");
+        PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM users WHERE username = ? ");
+        preparedStatement.setString(1, this.userID);
+        ResultSet resultSet = preparedStatement.executeQuery();
+
+    }
+
 
 
 }

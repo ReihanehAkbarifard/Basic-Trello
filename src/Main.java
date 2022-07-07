@@ -25,7 +25,7 @@ public class Main {
                                     break;
                                 case 2:
                                     switch (Integer.parseInt(JOptionPane.showInputDialog(null, "Please choose " +
-                                            "an option :\n1. Show all my detail\n2. Edit Profile\n3. back"))){
+                                            "an option :\n1. Show all my detail\n2. Edit Profile\n3. Delete Profile\n4. back"))){
                                         case 1:
                                             currentUser.seeProfile();
                                             break;
@@ -33,6 +33,9 @@ public class Main {
                                             currentUser.editProfile();
                                             break;
                                         case 3:
+                                            currentUser.deleteProfile();
+                                            break;
+                                        case 4:
                                             break;
                                     }
                                     break;
