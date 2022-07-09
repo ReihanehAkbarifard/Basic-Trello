@@ -24,7 +24,7 @@ public class Main {
                             switch (chosenOption) {
                                 case 1:
                                     switch (Integer.parseInt(JOptionPane.showInputDialog(null, "Please choose " +
-                                            "an option :\n1. create all my work space\n2. see all my work space\n4. back"))){
+                                            "an option :\n1. create new workspace\n2. see all my work space\n3. back"))){
                                         case 1:
                                             currentUser.createWorkSpace();
                                             break;

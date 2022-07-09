@@ -289,21 +289,23 @@ public class User {
     public void seeWorkSpaces() throws SQLException {
         Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/trello?" +
                 "autoReconnect=true&useSSL=false", "root", "");
-        PreparedStatement preparedStatement = connection.prepareStatement("select primarykeyworkspace from connectionbetweenuserandworkspace " +
-                "inner join users on connectionbetweenuserandworkspace.primarykeyuser = users.primarykey");
+        PreparedStatement preparedStatement = connection.prepareStatement("select primarykeyworkspace from connectionbetweenuserandworkspace WHERE " +
+                "connectionbetweenuserandworkspace.primarykeyuser = ?\n");
+        preparedStatement.setInt(1, getPrimaryKey());
         ResultSet resultSet = preparedStatement.executeQuery();
         StringBuilder allWorkSpaces = new StringBuilder();
+
         while (resultSet.next()){
-            preparedStatement = connection.prepareStatement("select workspacename from workspace where primarykey = ?");
+            preparedStatement = connection.prepareStatement("select * from workspace where primarykey = ?");
             preparedStatement.setString(1, resultSet.getString("primarykeyworkspace"));
             ResultSet rs = preparedStatement.executeQuery();
             if(rs.next()){
-                allWorkSpaces.append(" - " + rs.getString(1));
+                allWorkSpaces.append(" - " + rs.getString("workspacename"));
                 allWorkSpaces.append("\n");
-//                WorkSpace workSpace = new WorkSpace(rs.getString("workspacename"),
-//                rs.getString("status"), rs.getString("type"),
-//                rs.getString("primarykey"));
-//                getMyWorkSpaces().add(workSpace);
+                WorkSpace workSpace = new WorkSpace(rs.getString("workspacename"),
+                rs.getString("status"), rs.getString("type"),
+                rs.getString("primarykey"));
+                getMyWorkSpaces().add(workSpace);
             }
 
         }
