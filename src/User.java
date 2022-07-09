@@ -1,5 +1,6 @@
 import javax.swing.*;
 import java.sql.*;
+import java.util.ArrayList;
 
 public class User {
     private String fullName;
@@ -7,15 +8,30 @@ public class User {
     private String passWord;
     private String email;
     private String bio;
+    private int primaryKey;
+    private ArrayList<WorkSpace> myWorkSpaces = new ArrayList<>();
 
 
-    public User(String fullName, String userID, String passWord, String email) {
+    public User(String fullName, String userID, String passWord, String email, int primaryKey) {
         this.fullName = fullName;
         this.userID = userID;
         this.passWord = passWord;
         this.email = email;
+        this.primaryKey = primaryKey;
     }
 
+    public ArrayList<WorkSpace> getMyWorkSpaces() {
+        return myWorkSpaces;
+    }
+    public void setMyWorkSpaces(ArrayList<WorkSpace> myWorkSpaces) {
+        this.myWorkSpaces = myWorkSpaces;
+    }
+    public int getPrimaryKey() {
+        return primaryKey;
+    }
+    public void setPrimaryKey(int primaryKey) {
+        this.primaryKey = primaryKey;
+    }
     public String getFullName() {
         return fullName;
     }
@@ -97,7 +113,7 @@ public class User {
         Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/trello?" +
                 "autoReconnect=true&useSSL=false", "root", "");
 
-        PreparedStatement preparedStatement = connection.prepareStatement("Select * from Users where username = ? " +
+        PreparedStatement preparedStatement = connection.prepareStatement("Select * from users where username = ? " +
                 "or email = ?");
         preparedStatement.setString(1, userName);
         preparedStatement.setString(2, email);
@@ -108,7 +124,8 @@ public class User {
                         " Chosen Before", "Sign-Up page", JOptionPane.INFORMATION_MESSAGE);
 
             } else {
-                PreparedStatement preparedStatement2 = connection.prepareStatement("Insert into Users values(?, ?, ?, ?, ?)");
+                PreparedStatement preparedStatement2 = connection.prepareStatement("Insert into users (username, password, email, " +
+                        "fullname, bio) values(?, ?, ?, ?, ?)");
                 preparedStatement2.setString(1, userName);
                 preparedStatement2.setString(2, passWord);
                 preparedStatement2.setString(3, email);
@@ -120,7 +137,7 @@ public class User {
 
             }
         } catch (Exception err) {
-            System.out.println("err");
+            System.out.println(err.toString());
         }
 
     }
@@ -143,7 +160,7 @@ public class User {
                         JOptionPane.INFORMATION_MESSAGE);
                 User user = new User(resultSet.getString("fullname"),
                         resultSet.getString("username"), resultSet.getString("password") ,
-                        resultSet.getString("email"));
+                        resultSet.getString("email"), resultSet.getInt("primarykey"));
                 return user;
 
             }
@@ -218,9 +235,84 @@ public class User {
                 "autoReconnect=true&useSSL=false", "root", "");
         PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM users WHERE username = ? ");
         preparedStatement.setString(1, this.userID);
-        ResultSet resultSet = preparedStatement.executeQuery();
+        preparedStatement.executeUpdate();
+        JOptionPane.showMessageDialog(null , "Your account was deleted " +
+                        "successfully", "delete account",
+                JOptionPane.INFORMATION_MESSAGE);
+
 
     }
+    public void createWorkSpace() throws SQLException {
+        String title = JOptionPane.showInputDialog(null, "Please Enter the title of WorkSpace :",
+                "createWorkSpace", JOptionPane.QUESTION_MESSAGE);
+        String status = JOptionPane.showInputDialog(null, "Please Enter the status of WorkSpace :",
+                "createWorkSpace", JOptionPane.QUESTION_MESSAGE);
+        String type = JOptionPane.showInputDialog(null, "Please Enter the type of WorkSpace :",
+                "createWorkSpace", JOptionPane.QUESTION_MESSAGE);
+        Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/trello?" +
+                "autoReconnect=true&useSSL=false", "root", "");
+
+        PreparedStatement preparedStatement = connection.prepareStatement("Insert into workspace(workspacename, status ," +
+                " type) values(?, ?, ?)");
+        preparedStatement.setString(1, title);
+        preparedStatement.setString(2, status);
+        preparedStatement.setString(3, type);
+        preparedStatement.executeUpdate();
+        JOptionPane.showMessageDialog(null, "Your WorkSpace Was Added " +
+                "Successfully", "Create WorkSpace page", JOptionPane.INFORMATION_MESSAGE);
+
+        preparedStatement = connection.prepareStatement("SELECT primarykey FROM workspace ORDER BY primarykey DESC LIMIT 1 ");
+        ResultSet resultSet = preparedStatement.executeQuery();
+        resultSet.next();
+        int index = resultSet.getInt(1);
+        preparedStatement = connection.prepareStatement("Insert into connectionbetweenuserandworkspace" +
+                " values(?, ?)");
+        preparedStatement.setInt(1, getPrimaryKey());
+        preparedStatement.setInt(2, index);
+        preparedStatement.executeUpdate();
+
+
+    }
+    public void seeWorkSpaces() throws SQLException {
+        Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/trello?" +
+                "autoReconnect=true&useSSL=false", "root", "");
+
+//        PreparedStatement preparedStatement = connection.prepareStatement("select primarykeyworkspace" +
+//                " from connectionbetweenuserandworkspace where primarykeyworkspace = ?");
+//        preparedStatement.setInt(1, getPrimaryKey());
+//        ResultSet resultSet = preparedStatement.executeQuery();
+//        int index = 1;
+//        while (resultSet.next()){
+//            preparedStatement = connection.prepareStatement("select workspacename " +
+//                    "from workspace where primarykey = ?");
+//            preparedStatement.setInt(1, resultSet.getInt(index));
+//            ResultSet resultSet1 = preparedStatement.executeQuery();
+//            index++;
+//        }
+        PreparedStatement preparedStatement = connection.prepareStatement("select primarykeyworkspace from connectionbetweenuserandworkspace " +
+                "inner join users on connectionbetweenuserandworkspace.primarykeyuser = users.primarykey");
+        ResultSet resultSet = preparedStatement.executeQuery();
+        StringBuilder allWorkSpaces = new StringBuilder();
+        while (resultSet.next()){
+            preparedStatement = connection.prepareStatement("select workspacename from workspace where primarykey = ?");
+            preparedStatement.setString(1, resultSet.getString("primarykeyworkspace"));
+            ResultSet rs = preparedStatement.executeQuery();
+            if(rs.next()){
+                allWorkSpaces.append(" - " + rs.getString(1));
+                allWorkSpaces.append("\n");
+
+                WorkSpace workSpace = new WorkSpace(rs.getString("workspacename"),
+                rs.getString("status"), rs.getString("type"),
+                rs.getString("primarykey"));
+                getMyWorkSpaces().add(workSpace);
+            }
+
+        }
+        JOptionPane.showMessageDialog(null,allWorkSpaces,
+                "all workspaces", JOptionPane.INFORMATION_MESSAGE);
+
+    }
+
 
 
 

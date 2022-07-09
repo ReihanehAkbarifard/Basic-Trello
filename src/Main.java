@@ -22,6 +22,17 @@ public class Main {
                                     "Home page", JOptionPane.QUESTION_MESSAGE));
                             switch (chosenOption) {
                                 case 1:
+                                    switch (Integer.parseInt(JOptionPane.showInputDialog(null, "Please choose " +
+                                            "an option :\n1. create all my work space\n2. see all my work space\n4. back"))){
+                                        case 1:
+                                            currentUser.createWorkSpace();
+                                            break;
+                                        case 2:
+                                            currentUser.seeWorkSpaces();
+                                            break;
+                                        case 3:
+                                            break;
+                                    }
                                     break;
                                 case 2:
                                     switch (Integer.parseInt(JOptionPane.showInputDialog(null, "Please choose " +
@@ -34,6 +45,7 @@ public class Main {
                                             break;
                                         case 3:
                                             currentUser.deleteProfile();
+                                            isInHomePage = false;
                                             break;
                                         case 4:
                                             break;
@@ -48,6 +60,7 @@ public class Main {
 
                         }
                     }
+                    break;
                 case 2:
                     User.signUp();
                     break;
