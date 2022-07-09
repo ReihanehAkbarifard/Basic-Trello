@@ -245,10 +245,23 @@ public class User {
     public void createWorkSpace() throws SQLException {
         String title = JOptionPane.showInputDialog(null, "Please Enter the title of WorkSpace :",
                 "createWorkSpace", JOptionPane.QUESTION_MESSAGE);
-        String status = JOptionPane.showInputDialog(null, "Please Enter the status of WorkSpace :",
-                "createWorkSpace", JOptionPane.QUESTION_MESSAGE);
-        String type = JOptionPane.showInputDialog(null, "Please Enter the type of WorkSpace :",
-                "createWorkSpace", JOptionPane.QUESTION_MESSAGE);
+        int numStatus = Integer.parseInt(JOptionPane.showInputDialog(null, "Please Enter the status of WorkSpace :\n" +
+                "1. Public\n2. Private", "createWorkSpace", JOptionPane.QUESTION_MESSAGE));
+        String status = null;
+        switch (numStatus){
+            case 1:
+                status = "Public";
+                break;
+            case 2:
+                status = "Private";
+        }
+
+        JDialog.setDefaultLookAndFeelDecorated(true);
+        Object[] selectionValues = { "IT", "Education", "Business", "Marketing", "Human Recourse",
+                "Other"};
+        String initialSelection = "IT";
+        Object type = JOptionPane.showInputDialog(null, "Please Enter the type of WorkSpace :",
+                "Create WorkSpace", JOptionPane.QUESTION_MESSAGE, null, selectionValues, initialSelection);
         Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/trello?" +
                 "autoReconnect=true&useSSL=false", "root", "");
 
@@ -256,7 +269,7 @@ public class User {
                 " type) values(?, ?, ?)");
         preparedStatement.setString(1, title);
         preparedStatement.setString(2, status);
-        preparedStatement.setString(3, type);
+        preparedStatement.setString(3, (String) type);
         preparedStatement.executeUpdate();
         JOptionPane.showMessageDialog(null, "Your WorkSpace Was Added " +
                 "Successfully", "Create WorkSpace page", JOptionPane.INFORMATION_MESSAGE);
@@ -276,7 +289,6 @@ public class User {
     public void seeWorkSpaces() throws SQLException {
         Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/trello?" +
                 "autoReconnect=true&useSSL=false", "root", "");
-
         PreparedStatement preparedStatement = connection.prepareStatement("select primarykeyworkspace from connectionbetweenuserandworkspace " +
                 "inner join users on connectionbetweenuserandworkspace.primarykeyuser = users.primarykey");
         ResultSet resultSet = preparedStatement.executeQuery();
@@ -288,10 +300,10 @@ public class User {
             if(rs.next()){
                 allWorkSpaces.append(" - " + rs.getString(1));
                 allWorkSpaces.append("\n");
-                WorkSpace workSpace = new WorkSpace(rs.getString("workspacename"),
-                rs.getString("status"), rs.getString("type"),
-                rs.getString("primarykey"));
-                getMyWorkSpaces().add(workSpace);
+//                WorkSpace workSpace = new WorkSpace(rs.getString("workspacename"),
+//                rs.getString("status"), rs.getString("type"),
+//                rs.getString("primarykey"));
+//                getMyWorkSpaces().add(workSpace);
             }
 
         }

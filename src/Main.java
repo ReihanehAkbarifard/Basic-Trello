@@ -3,6 +3,7 @@ import java.sql.*;
 
 public class Main {
     public static void main(String[] args) throws SQLException {
+        JDialog.setDefaultLookAndFeelDecorated(true);
         JOptionPane.showMessageDialog(null, "--- Welcome To Mini Trello ---",
                 "Welcome", JOptionPane.INFORMATION_MESSAGE);
 
