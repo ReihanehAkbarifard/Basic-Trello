@@ -277,18 +277,6 @@ public class User {
         Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/trello?" +
                 "autoReconnect=true&useSSL=false", "root", "");
 
-//        PreparedStatement preparedStatement = connection.prepareStatement("select primarykeyworkspace" +
-//                " from connectionbetweenuserandworkspace where primarykeyworkspace = ?");
-//        preparedStatement.setInt(1, getPrimaryKey());
-//        ResultSet resultSet = preparedStatement.executeQuery();
-//        int index = 1;
-//        while (resultSet.next()){
-//            preparedStatement = connection.prepareStatement("select workspacename " +
-//                    "from workspace where primarykey = ?");
-//            preparedStatement.setInt(1, resultSet.getInt(index));
-//            ResultSet resultSet1 = preparedStatement.executeQuery();
-//            index++;
-//        }
         PreparedStatement preparedStatement = connection.prepareStatement("select primarykeyworkspace from connectionbetweenuserandworkspace " +
                 "inner join users on connectionbetweenuserandworkspace.primarykeyuser = users.primarykey");
         ResultSet resultSet = preparedStatement.executeQuery();
@@ -300,7 +288,6 @@ public class User {
             if(rs.next()){
                 allWorkSpaces.append(" - " + rs.getString(1));
                 allWorkSpaces.append("\n");
-
                 WorkSpace workSpace = new WorkSpace(rs.getString("workspacename"),
                 rs.getString("status"), rs.getString("type"),
                 rs.getString("primarykey"));
