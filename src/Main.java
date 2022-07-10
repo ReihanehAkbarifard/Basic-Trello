@@ -51,7 +51,18 @@ public class Main {
                                                                     currentUser.addBoards(workSpace);
                                                                     break;
                                                                 case 3:
-                                                                    currentUser.showBoards(workSpace);
+                                                                    boolean isInBoards = true;
+                                                                    while (isInBoards) {
+                                                                        index = currentUser.showBoards(workSpace);
+                                                                        switch (index) {
+                                                                            case 0:
+                                                                                isInBoards = false;
+                                                                                break;
+                                                                            default:
+                                                                                Board board = workSpace.getBoards().get(index - 1);
+                                                                                break;
+                                                                        }
+                                                                    }
                                                                     break;
                                                                 case 4:
                                                                     currentUser.addMembersToWorkSpace(workSpace);

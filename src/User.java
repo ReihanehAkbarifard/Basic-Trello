@@ -417,14 +417,16 @@ public class User {
     }
 
 
-    public void showBoards(WorkSpace workSpace) {
+    public int showBoards(WorkSpace workSpace) {
         int count = 1;
         StringBuilder allBoards = new StringBuilder();
         for (Board board : workSpace.getBoards()){
             allBoards.append(count + board.getTitle() + "\n");
             count++;
         }
-        JOptionPane.showMessageDialog(null, allBoards, "Show all boards", JOptionPane.INFORMATION_MESSAGE);
+        int chosen = Integer.parseInt(JOptionPane.showInputDialog(null, "These are all your boards \n" +
+                "Please enter the number to show more" + allBoards, "Show all boards", JOptionPane.INFORMATION_MESSAGE));
+        return chosen;
     }
 
     public void addBoards(WorkSpace workSpace) {
