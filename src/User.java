@@ -417,19 +417,33 @@ public class User {
     }
 
 
-    public int showBoards(WorkSpace workSpace) {
+    public int showBoards(WorkSpace workSpace) throws SQLException {
+        Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/trello?autoReconnect=true&useSSL=false",
+                "root", "");
+        PreparedStatement preparedStatement = connection.prepareStatement("select * " +
+                "from boards where workspace_id = ?");
+        preparedStatement.setInt(1, workSpace.getPrimaryKey());
+        ResultSet resultSet = preparedStatement.executeQuery();
+        System.out.println(resultSet.getRow());
+        while (resultSet.next()){
+            Board board = new Board(resultSet.getString("boardname"),
+                    resultSet.getInt("board_id"));
+            workSpace.getBoards().add(board);
+        }
+
         int count = 1;
         StringBuilder allBoards = new StringBuilder();
         for (Board board : workSpace.getBoards()){
-            allBoards.append(count + board.getTitle() + "\n");
+            allBoards.append(count + " - " + board.getTitle() + "\n");
             count++;
         }
         int chosen = Integer.parseInt(JOptionPane.showInputDialog(null, "These are all your boards \n" +
-                "Please enter the number to show more" + allBoards, "Show all boards", JOptionPane.INFORMATION_MESSAGE));
+                        allBoards + "Please enter the number to show more\n" ,
+                "Show all boards", JOptionPane.INFORMATION_MESSAGE));
         return chosen;
     }
 
-    public void addBoards(WorkSpace workSpace) {
+    public void addBoards(WorkSpace workSpace) throws SQLException {
         String name = null;
         while (true) {
             name = JOptionPane.showInputDialog(null, "Please enter the" +
@@ -441,9 +455,16 @@ public class User {
                         "add board", JOptionPane.INFORMATION_MESSAGE);
             }
         }
-        Board board = new Board(name);
-        workSpace.getBoards().add(board);
-        JOptionPane.showMessageDialog(null, "Successfully add new board", "Add new board", JOptionPane.INFORMATION_MESSAGE);
+        JOptionPane.showMessageDialog(null, "Successfully add new board",
+                "Add new board", JOptionPane.INFORMATION_MESSAGE);
+        Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/trello?autoReconnect=true&useSSL=false",
+                "root", "");
+        PreparedStatement preparedStatement = connection.prepareStatement("insert into boards (boardname, " +
+                "workspace_id ) values(?, ?)");
+        preparedStatement.setString(1, name);
+        preparedStatement.setInt(2, workSpace.getPrimaryKey());
+        preparedStatement.executeUpdate();
+
 
     }
 }

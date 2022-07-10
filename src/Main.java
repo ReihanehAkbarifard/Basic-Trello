@@ -60,7 +60,7 @@ public class Main {
                                                                                 break;
                                                                             default:
                                                                                 Board board = workSpace.getBoards().get(index - 1);
-                                                                                break;
+
                                                                         }
                                                                     }
                                                                     break;
