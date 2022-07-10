@@ -428,8 +428,17 @@ public class User {
     }
 
     public void addBoards(WorkSpace workSpace) {
-        String name = JOptionPane.showInputDialog(null, "Please enter the" +
-                " name of new board :", "add board", JOptionPane.QUESTION_MESSAGE);
+        String name = null;
+        while (true) {
+            name = JOptionPane.showInputDialog(null, "Please enter the" +
+                    " name of new board :", "add board", JOptionPane.QUESTION_MESSAGE);
+            if ((name != null) && ((name.length() > 3 && name.length() < 31))) {
+                break;
+            } else {
+                JOptionPane.showMessageDialog(null, "Not accepted ! Please try another one\nYour username must have at least 4 characters and at most 30 characters",
+                        "add board", JOptionPane.INFORMATION_MESSAGE);
+            }
+        }
         Board board = new Board(name);
         workSpace.getBoards().add(board);
 
