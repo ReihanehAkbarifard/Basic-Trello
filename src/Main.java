@@ -30,7 +30,36 @@ public class Main {
                                             currentUser.createWorkSpace();
                                             break;
                                         case 2:
-                                            currentUser.seeWorkSpaces();
+                                            boolean isInAllWorkSpaces = true;
+                                            while (isInAllWorkSpaces){
+                                            int index = currentUser.seeWorkSpaces();
+                                                switch (index) {
+                                                    case 0:
+                                                        isInAllWorkSpaces = false;
+                                                        break;
+                                                    default:
+                                                        WorkSpace workSpace = currentUser.getMyWorkSpaces().get(index - 1);
+                                                        boolean isInWorkSpaces = true;
+                                                        while (isInWorkSpaces){
+                                                            switch (Integer.parseInt(JOptionPane.showInputDialog(null,
+                                                                    "1. Show details\n2. show boards\n3. add members" +
+                                                                            "\n4. Back"))){
+                                                                case 1:
+                                                                    currentUser.showDetailsOfWorkspaces(workSpace);
+                                                                    break;
+                                                                case 2:
+                                                                    break;
+                                                                case 3:
+                                                                    currentUser.addMembersToWorkSpace(workSpace);
+                                                                    break;
+                                                                case 4:
+                                                                    isInWorkSpaces = false;
+                                                                    break;
+                                                            }
+                                                        }
+                                                }
+                                            }
+
                                             break;
                                         case 3:
                                             currentUser.searchForWorkSpaces();

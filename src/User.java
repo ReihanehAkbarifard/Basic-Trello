@@ -20,6 +20,11 @@ public class User {
         this.primaryKey = primaryKey;
     }
 
+    public User(String fullName, String userID) {
+        this.fullName = fullName;
+        this.userID = userID;
+    }
+
     public ArrayList<WorkSpace> getMyWorkSpaces() {
         return myWorkSpaces;
     }
@@ -289,14 +294,15 @@ public class User {
         resultSet.next();
         int index = resultSet.getInt(1);
         preparedStatement = connection.prepareStatement("Insert into connectionbetweenuserandworkspace" +
-                " values(?, ?)");
+                " values(?, ?, ?)");
         preparedStatement.setInt(1, getPrimaryKey());
         preparedStatement.setInt(2, index);
+        preparedStatement.setString(3, "Admin");
         preparedStatement.executeUpdate();
 
 
     }
-    public void seeWorkSpaces() throws SQLException {
+    public int seeWorkSpaces() throws SQLException {
         Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/trello?" +
                 "autoReconnect=true&useSSL=false", "root", "");
         PreparedStatement preparedStatement = connection.prepareStatement("select primarykeyworkspace from connectionbetweenuserandworkspace WHERE " +
@@ -313,7 +319,7 @@ public class User {
             if(rs.next()){
                 WorkSpace workSpace = new WorkSpace(rs.getString("workspacename"),
                 rs.getString("status"), rs.getString("type"),
-                rs.getString("primarykey"));
+                rs.getInt("primarykey"));
                 getMyWorkSpaces().add(workSpace);
             }
 
@@ -324,8 +330,10 @@ public class User {
             allWorkSpaces.append("\n");
             count++;
         }
-        JOptionPane.showMessageDialog(null, allWorkSpaces,
-                "all workspaces", JOptionPane.INFORMATION_MESSAGE);
+        int index = Integer.parseInt(JOptionPane.showInputDialog(null, "Enter a number to show more." +
+                        "\nenter 0 to back\n0 - back\n" + allWorkSpaces,
+                "all workspaces", JOptionPane.QUESTION_MESSAGE));
+        return index;
 
     }
 
@@ -341,11 +349,71 @@ public class User {
             allWorkSpaces.append(resultSet.getString("workspacename") + "\n");
             WorkSpace workSpace = new WorkSpace(resultSet.getString("workspacename"),
                     resultSet.getString("status"), resultSet.getString("type"),
-                    resultSet.getString("primarykey"));
+                    resultSet.getInt("primarykey"));
             WorkSpace.publicWorkSpaced.add(workSpace);
         }
         JOptionPane.showMessageDialog(null, allWorkSpaces, "All Public workspaces",
                 JOptionPane.INFORMATION_MESSAGE);
+    }
+    public void showDetailsOfWorkspaces(WorkSpace workSpace) throws SQLException {
+        Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/trello?" +
+                "autoReconnect=true&useSSL=false", "root", "");
+        PreparedStatement preparedStatement = connection.prepareStatement("select primarykeyuser, role" +
+                " from connectionbetweenuserandworkspace WHERE primarykeyworkspace = ?\n");
+        preparedStatement.setInt(1, workSpace.getPrimaryKey());
+        ResultSet resultSet = preparedStatement.executeQuery();
+        StringBuilder allMembers = new StringBuilder();
+        workSpace.getRole().clear();
+        while (resultSet.next()){
+            String _role = resultSet.getString("role");
+            String _username = null;
+            preparedStatement = connection.prepareStatement("select username from users where primarykey = ?");
+            preparedStatement.setString(1, resultSet.getString("primarykeyuser"));
+            ResultSet rs = preparedStatement.executeQuery();
+            if(rs.next()){
+                _username = rs.getString("username");
+                workSpace.getRole().put(_username, _role);
+            }
+
+        }
+        int count = 1;
+        for(String username : workSpace.getRole().keySet()){
+            allMembers.append(count + " - " + username + " -> " +
+                    workSpace.getRole().get(username) + "\n");
+            count++;
+        }
+
+        JOptionPane.showMessageDialog(null, "workspace name : "
+                + workSpace.getWorkSpaceName() + "\n" + "Status : " + workSpace.getStatus() + "\n" +
+                "Type : " + workSpace.getType() + "\n" + allMembers);
+    }
+    public void addMembersToWorkSpace(WorkSpace workSpace) throws SQLException {
+        Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/trello?autoReconnect=true&useSSL=false", "root", "");
+        String useridToAdd = JOptionPane.showInputDialog(null, "Please enter the user id which " +
+                "you want to add :", "Add Member", JOptionPane.QUESTION_MESSAGE);
+        PreparedStatement preparedStatement = connection.prepareStatement("select primarykey" +
+                " from users where username = ?");
+        preparedStatement.setString(1, useridToAdd);
+        ResultSet resultSet = preparedStatement.executeQuery();
+        int userid = 0;
+        if(resultSet.next()){
+            userid = resultSet.getInt(1);
+        }
+        preparedStatement = connection.prepareStatement("insert into connectionbetweenuserandworkspace values(?, ?, ?)");
+        if(userid != 0){
+            preparedStatement.setInt(1, userid);
+            preparedStatement.setInt(2, workSpace.getPrimaryKey());
+            preparedStatement.setString(3, "Member");
+            preparedStatement.executeUpdate();
+            JOptionPane.showMessageDialog(null, "User was added to workspace!",
+                    "Add Member", JOptionPane.INFORMATION_MESSAGE);
+
+        }
+        else {
+            JOptionPane.showMessageDialog(null, "User not found!",
+                    "Add Member", JOptionPane.INFORMATION_MESSAGE);
+        }
+
     }
 
 

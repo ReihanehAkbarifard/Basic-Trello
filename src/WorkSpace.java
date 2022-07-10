@@ -1,17 +1,19 @@
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class WorkSpace {
     private String workSpaceName;
     private ArrayList<User> guests = new ArrayList<>();
-    private ArrayList<User> admins = new ArrayList<>();
-    private ArrayList<User> members = new ArrayList<>();
+    public ArrayList<User> admins = new ArrayList<>();
+    public ArrayList<User> members = new ArrayList<>();
     private ArrayList<Board> boards = new ArrayList<>();
     private String status;
     private String type;
-    private String primaryKey;
+    private int primaryKey;
     public static ArrayList publicWorkSpaced = new ArrayList();
+    private HashMap<String, String> role = new HashMap<>();
 
-    public WorkSpace(String workSpaceName, String status, String type, String primaryKey) {
+    public WorkSpace(String workSpaceName, String status, String type, int primaryKey) {
         this.workSpaceName = workSpaceName;
         this.status = status;
         this.type = type;
@@ -66,12 +68,18 @@ public class WorkSpace {
     public void setType(String type) {
         this.type = type;
     }
-    public String getPrimaryKey() {
+    public int getPrimaryKey() {
         return primaryKey;
     }
-    public void setPrimaryKey(String primaryKey) {
+    public void setPrimaryKey(int primaryKey) {
         this.primaryKey = primaryKey;
     }
 
+    public HashMap<String, String> getRole() {
+        return role;
+    }
 
+    public void setRole(HashMap<String, String> role) {
+        this.role = role;
+    }
 }
