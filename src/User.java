@@ -250,7 +250,7 @@ public class User {
             if ((title != null) && ((title.length() > 4 && title.length() < 30))) {
                 break;
             } else {
-                JOptionPane.showMessageDialog(null, "Not accepted ! Please try another one\nYour username must have at least 4 characters ",
+                JOptionPane.showMessageDialog(null, "Not accepted ! Please try another one\nYour username must have at least 5 characters ",
                         "createWorkSpace", JOptionPane.INFORMATION_MESSAGE);
             }
         }
@@ -305,13 +305,12 @@ public class User {
         ResultSet resultSet = preparedStatement.executeQuery();
         StringBuilder allWorkSpaces = new StringBuilder();
 
+        getMyWorkSpaces().clear();
         while (resultSet.next()){
             preparedStatement = connection.prepareStatement("select * from workspace where primarykey = ?");
             preparedStatement.setString(1, resultSet.getString("primarykeyworkspace"));
             ResultSet rs = preparedStatement.executeQuery();
             if(rs.next()){
-                allWorkSpaces.append(" - " + rs.getString("workspacename"));
-                allWorkSpaces.append("\n");
                 WorkSpace workSpace = new WorkSpace(rs.getString("workspacename"),
                 rs.getString("status"), rs.getString("type"),
                 rs.getString("primarykey"));
@@ -319,7 +318,13 @@ public class User {
             }
 
         }
-        JOptionPane.showMessageDialog(null,allWorkSpaces,
+        int count = 1;
+        for(WorkSpace workSpace : getMyWorkSpaces()){
+            allWorkSpaces.append(count + " - " + workSpace.getWorkSpaceName());
+            allWorkSpaces.append("\n");
+            count++;
+        }
+        JOptionPane.showMessageDialog(null, allWorkSpaces,
                 "all workspaces", JOptionPane.INFORMATION_MESSAGE);
 
     }
