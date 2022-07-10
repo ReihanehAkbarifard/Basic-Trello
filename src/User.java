@@ -243,12 +243,22 @@ public class User {
 
     }
     public void createWorkSpace() throws SQLException {
-        String title = JOptionPane.showInputDialog(null, "Please Enter the title of WorkSpace :",
-                "createWorkSpace", JOptionPane.QUESTION_MESSAGE);
+        String title = null;
+        while (true) {
+            title = JOptionPane.showInputDialog(null, "Please Enter the title of WorkSpace :",
+                    "createWorkSpace", JOptionPane.QUESTION_MESSAGE);
+            if ((title != null) && ((title.length() > 4 && title.length() < 30))) {
+                break;
+            } else {
+                JOptionPane.showMessageDialog(null, "Not accepted ! Please try another one\nYour username must have at least 4 characters ",
+                        "createWorkSpace", JOptionPane.INFORMATION_MESSAGE);
+            }
+        }
+
         int numStatus = Integer.parseInt(JOptionPane.showInputDialog(null, "Please Enter the status of WorkSpace :\n" +
                 "1. Public\n2. Private", "createWorkSpace", JOptionPane.QUESTION_MESSAGE));
         String status = null;
-        switch (numStatus){
+        switch (numStatus) {
             case 1:
                 status = "Public";
                 break;
@@ -257,7 +267,7 @@ public class User {
         }
 
         JDialog.setDefaultLookAndFeelDecorated(true);
-        Object[] selectionValues = { "IT", "Education", "Business", "Marketing", "Human Recourse",
+        Object[] selectionValues = {"IT", "Education", "Business", "Marketing", "Human Recourse",
                 "Other"};
         String initialSelection = "IT";
         Object type = JOptionPane.showInputDialog(null, "Please Enter the type of WorkSpace :",
