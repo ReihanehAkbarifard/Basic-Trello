@@ -42,17 +42,21 @@ public class Main {
                                                         boolean isInWorkSpaces = true;
                                                         while (isInWorkSpaces){
                                                             switch (Integer.parseInt(JOptionPane.showInputDialog(null,
-                                                                    "1. Show details\n2. show boards\n3. add members" +
-                                                                            "\n4. Back"))){
+                                                                    "1. Show details\n2. add boards\n3. show boards\n" +
+                                                                            "4. add members\n5. Back"))){
                                                                 case 1:
                                                                     currentUser.showDetailsOfWorkspaces(workSpace);
                                                                     break;
                                                                 case 2:
+                                                                    currentUser.addBoards(workSpace);
                                                                     break;
                                                                 case 3:
-                                                                    currentUser.addMembersToWorkSpace(workSpace);
+                                                                    currentUser.showBoards();
                                                                     break;
                                                                 case 4:
+                                                                    currentUser.addMembersToWorkSpace(workSpace);
+                                                                    break;
+                                                                case 5:
                                                                     isInWorkSpaces = false;
                                                                     break;
                                                             }

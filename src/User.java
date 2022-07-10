@@ -417,4 +417,15 @@ public class User {
     }
 
 
+    public void showBoards() {
+
+    }
+
+    public void addBoards(WorkSpace workSpace) {
+        String name = JOptionPane.showInputDialog(null, "Please enter the" +
+                " name of new board :", "add board", JOptionPane.QUESTION_MESSAGE);
+        Board board = new Board(name);
+        workSpace.getBoards().add(board);
+
+    }
 }

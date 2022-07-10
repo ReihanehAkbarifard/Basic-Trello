@@ -5,4 +5,8 @@ public class Board {
     private ArrayList<User> guests = new ArrayList<>();
     private ArrayList<User> admins = new ArrayList<>();
     private ArrayList<List> lists = new ArrayList<>();
+
+    public Board(String title) {
+        this.title = title;
+    }
 }
