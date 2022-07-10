@@ -517,4 +517,30 @@ public class User {
 
 
     }
+    public int showAllCards(List list) throws SQLException {
+        Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/trello?autoReconnect=true&useSSL=false",
+                "root", "");
+        PreparedStatement preparedStatement = connection.prepareStatement("select * " +
+                "from cards where list_id = ?");
+        preparedStatement.setInt(1, list.getListId());
+        ResultSet resultSet = preparedStatement.executeQuery();
+        list.getCards().clear();
+        while (resultSet.next()){
+            Card card = new Card(resultSet.getString("cardname"),
+                    resultSet.getString("description"), resultSet.getString("cardname"));
+            list.getCards().add(card);
+        }
+
+        int count = 1;
+        StringBuilder allLists = new StringBuilder();
+        for (Card card : list.getCards()){
+            allLists.append(count + " - " + card.getTitle() + "\n");
+            count++;
+        }
+        int chosen = Integer.parseInt(JOptionPane.showInputDialog(null, "These are all your cards \n" +
+                        allLists + "Please enter the number to show more\n" ,
+                "Show all cards", JOptionPane.INFORMATION_MESSAGE));
+        return chosen;
+    }
+
 }

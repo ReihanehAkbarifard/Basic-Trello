@@ -13,23 +13,18 @@ public class List {
     public String getName() {
         return name;
     }
-
     public void setName(String name) {
         this.name = name;
     }
-
     public int getListId() {
         return listId;
     }
-
     public void setListId(int listId) {
         this.listId = listId;
     }
-
     public ArrayList<Card> getCards() {
         return cards;
     }
-
     public void setCards(ArrayList<Card> cards) {
         this.cards = cards;
     }

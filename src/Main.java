@@ -65,8 +65,10 @@ public class Main {
                                                                                     switch (Integer.parseInt(JOptionPane.showInputDialog(null,
                                                                                             "1. show all lists\n2. add new list\n3. Back"))) {
                                                                                         case 1:
-                                                                                            currentUser.showAllLists(board);
-
+                                                                                            index = currentUser.showAllLists(board);
+                                                                                            List list = board.getLists().get(index - 1);
+                                                                                            index = currentUser.showAllCards(list);
+                                                                                            //go to card
                                                                                             break;
                                                                                         case 2:
                                                                                             currentUser.addLists(board);
