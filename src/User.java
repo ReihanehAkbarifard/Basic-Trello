@@ -443,6 +443,7 @@ public class User {
         }
         Board board = new Board(name);
         workSpace.getBoards().add(board);
+        JOptionPane.showMessageDialog(null, "Successfully add new board", "Add new board", JOptionPane.INFORMATION_MESSAGE);
 
     }
 }
