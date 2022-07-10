@@ -417,8 +417,14 @@ public class User {
     }
 
 
-    public void showBoards() {
-
+    public void showBoards(WorkSpace workSpace) {
+        int count = 1;
+        StringBuilder allBoards = new StringBuilder();
+        for (Board board : workSpace.getBoards()){
+            allBoards.append(count + board.getTitle() + "\n");
+            count++;
+        }
+        JOptionPane.showMessageDialog(null, allBoards, "Show all boards", JOptionPane.INFORMATION_MESSAGE);
     }
 
     public void addBoards(WorkSpace workSpace) {

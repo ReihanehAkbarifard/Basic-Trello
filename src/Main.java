@@ -51,7 +51,7 @@ public class Main {
                                                                     currentUser.addBoards(workSpace);
                                                                     break;
                                                                 case 3:
-                                                                    currentUser.showBoards();
+                                                                    currentUser.showBoards(workSpace);
                                                                     break;
                                                                 case 4:
                                                                     currentUser.addMembersToWorkSpace(workSpace);
