@@ -19,4 +19,36 @@ public class Board {
     public void setTitle(String title) {
         this.title = title;
     }
+
+    public int getBoardId() {
+        return boardId;
+    }
+
+    public void setBoardId(int boardId) {
+        this.boardId = boardId;
+    }
+
+    public ArrayList<User> getGuests() {
+        return guests;
+    }
+
+    public void setGuests(ArrayList<User> guests) {
+        this.guests = guests;
+    }
+
+    public ArrayList<User> getAdmins() {
+        return admins;
+    }
+
+    public void setAdmins(ArrayList<User> admins) {
+        this.admins = admins;
+    }
+
+    public ArrayList<List> getLists() {
+        return lists;
+    }
+
+    public void setLists(ArrayList<List> lists) {
+        this.lists = lists;
+    }
 }

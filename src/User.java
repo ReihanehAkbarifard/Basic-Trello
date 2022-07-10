@@ -378,7 +378,7 @@ public class User {
         }
         int count = 1;
         for(String username : workSpace.getRole().keySet()){
-            allMembers.append(count + " - " + username + " -> " +
+            allMembers.append(count + " - " + username + " : " +
                     workSpace.getRole().get(username) + "\n");
             count++;
         }
@@ -424,7 +424,7 @@ public class User {
                 "from boards where workspace_id = ?");
         preparedStatement.setInt(1, workSpace.getPrimaryKey());
         ResultSet resultSet = preparedStatement.executeQuery();
-        System.out.println(resultSet.getRow());
+        workSpace.getBoards().clear();
         while (resultSet.next()){
             Board board = new Board(resultSet.getString("boardname"),
                     resultSet.getInt("board_id"));
@@ -433,6 +433,7 @@ public class User {
 
         int count = 1;
         StringBuilder allBoards = new StringBuilder();
+
         for (Board board : workSpace.getBoards()){
             allBoards.append(count + " - " + board.getTitle() + "\n");
             count++;
@@ -463,6 +464,55 @@ public class User {
                 "workspace_id ) values(?, ?)");
         preparedStatement.setString(1, name);
         preparedStatement.setInt(2, workSpace.getPrimaryKey());
+        preparedStatement.executeUpdate();
+
+
+    }
+    public int showAllLists(Board board) throws SQLException {
+        Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/trello?autoReconnect=true&useSSL=false",
+                "root", "");
+        PreparedStatement preparedStatement = connection.prepareStatement("select * " +
+                "from lists where board_id = ?");
+        preparedStatement.setInt(1, board.getBoardId());
+        ResultSet resultSet = preparedStatement.executeQuery();
+        board.getLists().clear();
+        while (resultSet.next()){
+            List list = new List(resultSet.getString("listname"),
+                    resultSet.getInt("list_id"));
+            board.getLists().add(list);
+        }
+
+        int count = 1;
+        StringBuilder allLists = new StringBuilder();
+        for (List list : board.getLists()){
+            allLists.append(count + " - " + list.getName() + "\n");
+            count++;
+        }
+        int chosen = Integer.parseInt(JOptionPane.showInputDialog(null, "These are all your lists \n" +
+                        allLists + "Please enter the number to show more\n" ,
+                "Show all lists", JOptionPane.INFORMATION_MESSAGE));
+        return chosen;
+    }
+    public void addLists(Board board) throws SQLException {
+        String name = null;
+        while (true) {
+            name = JOptionPane.showInputDialog(null, "Please enter the" +
+                    " name of new list :", "add list", JOptionPane.QUESTION_MESSAGE);
+            if ((name != null) && ((name.length() > 3 && name.length() < 31))) {
+                break;
+            } else {
+                JOptionPane.showMessageDialog(null, "Not accepted ! Please try another one\nYour username must have at least 4 characters and at most 30 characters",
+                        "add board", JOptionPane.INFORMATION_MESSAGE);
+            }
+        }
+        JOptionPane.showMessageDialog(null, "Successfully add new list",
+                "Add new list", JOptionPane.INFORMATION_MESSAGE);
+        Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/trello?autoReconnect=true&useSSL=false",
+                "root", "");
+        PreparedStatement preparedStatement = connection.prepareStatement("insert into lists (listname, " +
+                "board_id ) values(?, ?)");
+        preparedStatement.setString(1, name);
+        preparedStatement.setInt(2, board.getBoardId());
         preparedStatement.executeUpdate();
 
 

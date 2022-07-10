@@ -60,6 +60,23 @@ public class Main {
                                                                                 break;
                                                                             default:
                                                                                 Board board = workSpace.getBoards().get(index - 1);
+                                                                                boolean isInBoard = true;
+                                                                                while (isInBoard) {
+                                                                                    switch (Integer.parseInt(JOptionPane.showInputDialog(null,
+                                                                                            "1. show all lists\n2. add new list\n3. Back"))) {
+                                                                                        case 1:
+                                                                                            currentUser.showAllLists(board);
+
+                                                                                            break;
+                                                                                        case 2:
+                                                                                            currentUser.addLists(board);
+                                                                                            break;
+                                                                                        case 3:
+                                                                                            isInBoard = false;
+                                                                                            break;
+                                                                                    }
+                                                                                }
+                                                                                break;
 
                                                                         }
                                                                     }
