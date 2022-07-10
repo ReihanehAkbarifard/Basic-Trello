@@ -329,7 +329,24 @@ public class User {
 
     }
 
-
+    public void searchForWorkSpaces() throws SQLException {
+        Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/trello?" +
+                "autoReconnect=true&useSSL=false", "root", "");
+        PreparedStatement preparedStatement = connection.prepareStatement("select * from workspace where status = ?");
+        String find = "Public";
+        preparedStatement.setString(1, find);
+        ResultSet resultSet = preparedStatement.executeQuery();
+        StringBuilder allWorkSpaces = new StringBuilder();
+        while (resultSet.next()) {
+            allWorkSpaces.append(resultSet.getString("workspacename") + "\n");
+            WorkSpace workSpace = new WorkSpace(resultSet.getString("workspacename"),
+                    resultSet.getString("status"), resultSet.getString("type"),
+                    resultSet.getString("primarykey"));
+            WorkSpace.publicWorkSpaced.add(workSpace);
+        }
+        JOptionPane.showMessageDialog(null, allWorkSpaces, "All Public workspaces",
+                JOptionPane.INFORMATION_MESSAGE);
+    }
 
 
 }
