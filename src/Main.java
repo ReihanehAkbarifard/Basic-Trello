@@ -147,6 +147,8 @@ public class Main {
                                     }
                                     break;
                                 case 3:
+                                    JOptionPane.showMessageDialog(null, "LoggedOut successfully",
+                                            "Logout Page", JOptionPane.INFORMATION_MESSAGE);
                                     isInHomePage = false;
                                     break;
 
