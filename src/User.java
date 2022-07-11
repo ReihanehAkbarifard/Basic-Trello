@@ -531,15 +531,17 @@ public class User {
             list.getCards().add(card);
         }
 
-        int count = 1;
-        StringBuilder allLists = new StringBuilder();
+        ArrayList<String> options = new ArrayList<>();
+        options.add("Back");
         for (Card card : list.getCards()){
-            allLists.append(count + " - " + card.getTitle() + "\n");
-            count++;
+            options.add(card.getTitle());
+
         }
-        int chosen = Integer.parseInt(JOptionPane.showInputDialog(null, "These are all your cards \n" +
-                        allLists + "Please enter the number to show more\n" ,
-                "Show all cards", JOptionPane.INFORMATION_MESSAGE));
+
+
+        int chosen = JOptionPane.showOptionDialog(null, "These are all your cards \n",
+                "Show all cards",
+                JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options.toArray(), options.get(0));
         return chosen;
     }
     public void addCard(List list) throws SQLException{
@@ -551,15 +553,15 @@ public class User {
                 break;
             } else {
                 JOptionPane.showMessageDialog(null, "Not accepted ! Please try another one\nYour username must have at least 4 characters and at most 30 characters",
-                        "add list", JOptionPane.INFORMATION_MESSAGE);
+                        "add card", JOptionPane.INFORMATION_MESSAGE);
             }
         }
         JOptionPane.showMessageDialog(null, "Successfully add new card",
                 "Add new card", JOptionPane.INFORMATION_MESSAGE);
         Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/trello?autoReconnect=true&useSSL=false",
                 "root", "");
-        PreparedStatement preparedStatement = connection.prepareStatement("insert into cards (listname, " +
-                "card_id ) values(?, ?)");
+        PreparedStatement preparedStatement = connection.prepareStatement("insert into cards (cardname, " +
+                "list_id ) values(?, ?)");
         preparedStatement.setString(1, name);
         preparedStatement.setInt(2, list.getListId());
         preparedStatement.executeUpdate();

@@ -67,8 +67,35 @@ public class Main {
                                                                                         case 1:
                                                                                             index = currentUser.showAllLists(board);
                                                                                             List list = board.getLists().get(index - 1);
-                                                                                            index = currentUser.showAllCards(list);
-                                                                                            //go to card
+                                                                                            Boolean isInList = true;
+                                                                                            while (isInList) {
+                                                                                                switch (Integer.parseInt(JOptionPane.showInputDialog(null,
+                                                                                                        "Please Choose an option :\n1. show all cards\n" +
+                                                                                                                "2. add new card\n3. Back", "All lists",
+                                                                                                        JOptionPane.QUESTION_MESSAGE))) {
+                                                                                                    case 1:
+                                                                                                        Boolean isInCard = true;
+                                                                                                        while (isInCard) {
+                                                                                                            index = currentUser.showAllCards(list);
+                                                                                                            if (index != 0) {
+                                                                                                                //////////////////
+
+                                                                                                            } else {
+                                                                                                                break;
+                                                                                                            }
+                                                                                                        }
+                                                                                                        break;
+                                                                                                    case 2:
+                                                                                                        currentUser.addCard(list);
+                                                                                                        break;
+                                                                                                    case 3:
+                                                                                                        isInList = false;
+                                                                                                        break;
+
+
+                                                                                                }
+                                                                                            }
+//
                                                                                             break;
                                                                                         case 2:
                                                                                             currentUser.addLists(board);
