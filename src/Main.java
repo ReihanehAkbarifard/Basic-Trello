@@ -84,7 +84,9 @@ public class Main {
                                                                                                                     case 0:
                                                                                                                         break;
                                                                                                                     case 1:
-                                                                                                                        //////
+                                                                                                                        break;
+                                                                                                                    case 2:
+                                                                                                                        currentUser.moveCard(board, card);
                                                                                                                         break;
 
                                                                                                                 }

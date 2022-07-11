@@ -596,6 +596,31 @@ public class User {
 
 
     }
+    public void moveCard(Board board, Card card) throws SQLException {
+        Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/trello?autoReconnect=true&useSSL=false",
+                "root", "");
+        ArrayList<String> allListsName = new ArrayList<>();
+        for(List list1 : board.getLists()){
+            allListsName.add(list1.getName());
+        }
+
+
+        Object type = JOptionPane.showInputDialog(null, "Please Enter the type of WorkSpace :",
+                "Create WorkSpace", JOptionPane.QUESTION_MESSAGE, null, allListsName.toArray(), allListsName.get(0));
+        int listId = 0;
+        for (List list1 : board.getLists()){
+            if(list1.getName().equals(type.toString())){
+                listId = list1.getListId();
+            }
+        }
+        PreparedStatement preparedStatement = connection.prepareStatement("update cards" +
+                " set list_id = ? where card_id = ?");
+        preparedStatement.setInt(1, listId);
+        preparedStatement.setInt(2, card.getCardId());
+        preparedStatement.executeUpdate();
+        JOptionPane.showMessageDialog(null, "Card Moved Successfully",
+                "Move card", JOptionPane.INFORMATION_MESSAGE);
+    }
 
     
 }
