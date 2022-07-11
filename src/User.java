@@ -542,5 +542,27 @@ public class User {
                 "Show all cards", JOptionPane.INFORMATION_MESSAGE));
         return chosen;
     }
+    public void addCard(List list) throws SQLException{
+        String name = null;
+        while (true) {
+            name = JOptionPane.showInputDialog(null, "Please enter the" +
+                    " name of new card :", "add card", JOptionPane.QUESTION_MESSAGE);
+            if ((name != null) && ((name.length() > 3 && name.length() < 31))) {
+                break;
+            } else {
+                JOptionPane.showMessageDialog(null, "Not accepted ! Please try another one\nYour username must have at least 4 characters and at most 30 characters",
+                        "add list", JOptionPane.INFORMATION_MESSAGE);
+            }
+        }
+        JOptionPane.showMessageDialog(null, "Successfully add new card",
+                "Add new card", JOptionPane.INFORMATION_MESSAGE);
+        Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/trello?autoReconnect=true&useSSL=false",
+                "root", "");
+        PreparedStatement preparedStatement = connection.prepareStatement("insert into cards (listname, " +
+                "card_id ) values(?, ?)");
+        preparedStatement.setString(1, name);
+        preparedStatement.setInt(2, list.getListId());
+        preparedStatement.executeUpdate();
+    }
 
 }

@@ -12,6 +12,7 @@ public class Card {
         this.label = label;
     }
 
+
     public String getTitle() {
         return title;
     }
