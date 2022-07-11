@@ -526,7 +526,7 @@ public class User {
         ResultSet resultSet = preparedStatement.executeQuery();
         list.getCards().clear();
         while (resultSet.next()){
-            Card card = new Card(resultSet.getString("cardname"),
+            Card card = new Card(resultSet.getString("cardname"), resultSet.getInt("card_id"),
                     resultSet.getString("description"), resultSet.getString("cardname"));
             list.getCards().add(card);
         }
