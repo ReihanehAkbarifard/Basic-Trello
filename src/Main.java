@@ -84,6 +84,7 @@ public class Main {
                                                                                                                     case 0:
                                                                                                                         break;
                                                                                                                     case 1:
+                                                                                                                        currentUser.editAndAddToCard(card);
                                                                                                                         break;
                                                                                                                     case 2:
                                                                                                                         currentUser.moveCard(board, card);

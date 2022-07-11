@@ -3,6 +3,7 @@ import java.sql.*;
 import java.util.ArrayList;
 
 public class User {
+
     private String fullName;
     private String userID;
     private String passWord;
@@ -620,6 +621,52 @@ public class User {
         preparedStatement.executeUpdate();
         JOptionPane.showMessageDialog(null, "Card Moved Successfully",
                 "Move card", JOptionPane.INFORMATION_MESSAGE);
+    }
+    public void editAndAddToCard(Card card) throws SQLException {
+        Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/trello?autoReconnect=true&useSSL=false",
+                "root", "");
+        Object[] selectionValues = {"Title", "Label", "Description"};
+        String initialSelection = "Title";
+        Object type = JOptionPane.showInputDialog(null, "Please Choose the item which you want " +
+                        "to change :",
+                "Edit And Add To Card", JOptionPane.QUESTION_MESSAGE, null, selectionValues, initialSelection);
+        if(type.toString().equals("Label")){
+            String newLabel = JOptionPane.showInputDialog(null, "Please enter your new label :",
+                    "Edit And Add To Card",JOptionPane.QUESTION_MESSAGE);
+            PreparedStatement preparedStatement = connection.prepareStatement("update cards " +
+                    "set label = ? where card_id = ? ");
+            preparedStatement.setString(1, newLabel);
+            preparedStatement.setInt(2, card.getCardId());
+            preparedStatement.executeUpdate();
+            JOptionPane.showMessageDialog(null, "Label Changed Successfully",
+                    "Change label", JOptionPane.INFORMATION_MESSAGE);
+
+        }
+        else if (type.toString().equals("Description")){
+            String newDescription = JOptionPane.showInputDialog(null, "Please enter your new description :",
+                    "Edit And Add To Card",JOptionPane.QUESTION_MESSAGE);
+            PreparedStatement preparedStatement = connection.prepareStatement("update cards " +
+                    "set description = ? where card_id = ? ");
+            preparedStatement.setString(1, newDescription);
+            preparedStatement.setInt(2, card.getCardId());
+            preparedStatement.executeUpdate();
+            JOptionPane.showMessageDialog(null, "Description Changed Successfully",
+                    "Change Description", JOptionPane.INFORMATION_MESSAGE);
+        }
+        else if (type.toString().equals("Title")){
+            String newTitle = JOptionPane.showInputDialog(null, "Please enter your new title :",
+                    "Edit And Add To Card",JOptionPane.QUESTION_MESSAGE);
+            PreparedStatement preparedStatement = connection.prepareStatement("update cards " +
+                    "set title = ? where card_id = ? ");
+            preparedStatement.setString(1, newTitle);
+            preparedStatement.setInt(2, card.getCardId());
+            preparedStatement.executeUpdate();
+            JOptionPane.showMessageDialog(null, "title Changed Successfully",
+                    "Change title", JOptionPane.INFORMATION_MESSAGE);
+        }
+
+
+
     }
 
     
