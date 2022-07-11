@@ -4,7 +4,7 @@ import java.sql.*;
 public class Main {
     public static void main(String[] args) throws SQLException {
         JDialog.setDefaultLookAndFeelDecorated(true);
-        JOptionPane.showMessageDialog(null, "--- Welcome To Mini Trello ---",
+        JOptionPane.showMessageDialog(null, "--- Welcome To Mini Trello --- ",
                 "Welcome", JOptionPane.INFORMATION_MESSAGE);
 
         boolean isAppRunning = true;
@@ -160,6 +160,8 @@ public class Main {
                     User.signUp();
                     break;
                 case 3:
+                    JOptionPane.showMessageDialog(null, "Thank you ! \uD83D\uDE09",
+                            "Exit Page", JOptionPane.INFORMATION_MESSAGE);
                     isAppRunning = false;
                     break;
             }

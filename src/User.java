@@ -566,5 +566,5 @@ public class User {
         preparedStatement.setInt(2, list.getListId());
         preparedStatement.executeUpdate();
     }
-
+    
 }
