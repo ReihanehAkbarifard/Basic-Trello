@@ -78,7 +78,16 @@ public class Main {
                                                                                                         while (isInCard) {
                                                                                                             index = currentUser.showAllCards(list);
                                                                                                             if (index != 0) {
-                                                                                                                //////////////////
+                                                                                                                Card card = list.getCards().get(index - 1);
+                                                                                                                index = currentUser.showCard(card);
+                                                                                                                switch (index){
+                                                                                                                    case 0:
+                                                                                                                        break;
+                                                                                                                    case 1:
+                                                                                                                        //////
+                                                                                                                        break;
+
+                                                                                                                }
 
                                                                                                             } else {
                                                                                                                 break;
@@ -147,7 +156,7 @@ public class Main {
                                     }
                                     break;
                                 case 3:
-                                    JOptionPane.showMessageDialog(null, "LoggedOut successfully",
+                                    JOptionPane.showMessageDialog(null, "Logged Out successfully",
                                             "Logout Page", JOptionPane.INFORMATION_MESSAGE);
                                     isInHomePage = false;
                                     break;

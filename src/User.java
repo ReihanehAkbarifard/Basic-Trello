@@ -561,10 +561,41 @@ public class User {
         Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/trello?autoReconnect=true&useSSL=false",
                 "root", "");
         PreparedStatement preparedStatement = connection.prepareStatement("insert into cards (cardname, " +
-                "list_id ) values(?, ?)");
+                "list_id ,description, label) values(?, ?, ?, ?)");
         preparedStatement.setString(1, name);
         preparedStatement.setInt(2, list.getListId());
+        preparedStatement.setString(3, "");
+        preparedStatement.setString(4, "");
         preparedStatement.executeUpdate();
     }
+
+    public int showCard(Card card) throws SQLException {
+        Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/trello?autoReconnect=true&useSSL=false",
+                "root", "");
+        PreparedStatement preparedStatement = connection.prepareStatement("select * " +
+                "from cards where card_id = ?");
+        preparedStatement.setInt(1, card.getCardId());
+        ResultSet resultSet = preparedStatement.executeQuery();
+        StringBuilder allDetails = new StringBuilder();
+        while (resultSet.next()){
+            allDetails.append("name : " + resultSet.getString("cardname") + "\n" +
+                            "Label : " + resultSet.getString("label") + "\n" + "Description : " +
+                    resultSet.getString("description") + "\n");
+
+        }
+
+        ArrayList<String> options = new ArrayList<>();
+        options.add("Back");
+        options.add("Edit and Add sth");
+        options.add("Move card");
+
+        int chosen = JOptionPane.showOptionDialog(null, allDetails + "\n",
+                "Show And Edit Card",
+                JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options.toArray(), options.get(0));
+        return chosen;
+
+
+    }
+
     
 }
