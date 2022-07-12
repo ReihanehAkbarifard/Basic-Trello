@@ -625,7 +625,7 @@ public class User {
     public void editAndAddToCard(Card card) throws SQLException {
         Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/trello?autoReconnect=true&useSSL=false",
                 "root", "");
-        Object[] selectionValues = {"Title", "Label", "Description"};
+        Object[] selectionValues = {"Title", "Label", "Description", "Deadline"};
         String initialSelection = "Title";
         Object type = JOptionPane.showInputDialog(null, "Please Choose the item which you want " +
                         "to change :",
@@ -663,6 +663,37 @@ public class User {
             preparedStatement.executeUpdate();
             JOptionPane.showMessageDialog(null, "title Changed Successfully",
                     "Change title", JOptionPane.INFORMATION_MESSAGE);
+        }
+        else if (type.toString().equals("Deadline")){
+            JDialog.setDefaultLookAndFeelDecorated(true);
+
+            String[] year = { "2022", "2023", "2024", "2025", "2026", "2027", "2028", "2029", "2030", "2031", "2032", "2033" };
+            initialSelection = "2022";
+            String selectionYear = (String) JOptionPane.showInputDialog(null, "Choose the deadlines year :",
+                    "Set Deadline", JOptionPane.QUESTION_MESSAGE, null, year, initialSelection);
+
+
+            String[] month = { "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" };
+            initialSelection = "January";
+            String selectionMonth = (String) JOptionPane.showInputDialog(null, "Choose the deadlines month :",
+                    "Set Deadline", JOptionPane.QUESTION_MESSAGE, null, month, initialSelection);
+
+            String[] days = { "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15",
+                    "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31" };
+            initialSelection = "1";
+            String selectionDay = (String) JOptionPane.showInputDialog(null, "Choose the deadlines Day :",
+                    "Set Deadline", JOptionPane.QUESTION_MESSAGE, null, days, initialSelection);
+
+            String newDeadline = selectionDay + " " + selectionMonth + " " + selectionYear;
+
+            PreparedStatement preparedStatement = connection.prepareStatement("update cards " +
+                    "set deadline = ? where card_id = ? ");
+            preparedStatement.setString(1, newDeadline);
+            preparedStatement.setInt(2, card.getCardId());
+            preparedStatement.executeUpdate();
+
+            JOptionPane.showMessageDialog(null, "Deadline is set for : \n\t*** " + newDeadline + " ***",
+                    "Set Deadline", JOptionPane.INFORMATION_MESSAGE);
         }
 
 
