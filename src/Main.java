@@ -6,7 +6,6 @@ public class Main {
         JDialog.setDefaultLookAndFeelDecorated(true);
         JOptionPane.showMessageDialog(null, "--- Welcome To Mini Trello --- ",
                 "Welcome", JOptionPane.INFORMATION_MESSAGE);
-
         boolean isAppRunning = true;
         while (isAppRunning) {
             int chosenOption = Integer.parseInt(JOptionPane.showInputDialog(null,

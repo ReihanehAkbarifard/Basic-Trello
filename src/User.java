@@ -562,11 +562,12 @@ public class User {
         Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/trello?autoReconnect=true&useSSL=false",
                 "root", "");
         PreparedStatement preparedStatement = connection.prepareStatement("insert into cards (cardname, " +
-                "list_id ,description, label) values(?, ?, ?, ?)");
+                "list_id ,description, label, deadline) values(?, ?, ?, ?, ?)");
         preparedStatement.setString(1, name);
         preparedStatement.setInt(2, list.getListId());
         preparedStatement.setString(3, "");
         preparedStatement.setString(4, "");
+        preparedStatement.setString(5, "");
         preparedStatement.executeUpdate();
     }
 
@@ -581,7 +582,8 @@ public class User {
         while (resultSet.next()){
             allDetails.append("name : " + resultSet.getString("cardname") + "\n" +
                             "Label : " + resultSet.getString("label") + "\n" + "Description : " +
-                    resultSet.getString("description") + "\n");
+                    resultSet.getString("description") + "\n" +
+                    "Deadline : " + resultSet.getString("deadline") + "\n");
 
         }
 
@@ -657,7 +659,7 @@ public class User {
             String newTitle = JOptionPane.showInputDialog(null, "Please enter your new title :",
                     "Edit And Add To Card",JOptionPane.QUESTION_MESSAGE);
             PreparedStatement preparedStatement = connection.prepareStatement("update cards " +
-                    "set title = ? where card_id = ? ");
+                    "set cardname = ? where card_id = ? ");
             preparedStatement.setString(1, newTitle);
             preparedStatement.setInt(2, card.getCardId());
             preparedStatement.executeUpdate();
@@ -665,8 +667,6 @@ public class User {
                     "Change title", JOptionPane.INFORMATION_MESSAGE);
         }
         else if (type.toString().equals("Deadline")){
-            JDialog.setDefaultLookAndFeelDecorated(true);
-
             String[] year = { "2022", "2023", "2024", "2025", "2026", "2027", "2028", "2029", "2030", "2031", "2032", "2033" };
             initialSelection = "2022";
             String selectionYear = (String) JOptionPane.showInputDialog(null, "Choose the deadlines year :",
