@@ -796,15 +796,14 @@ public class User {
             card.getActivities_message().add(activity);
 
         }
-        System.out.println(card.getActivities_message().get(0).getSender());
-        StringBuilder text = new StringBuilder("");
+        StringBuilder text = new StringBuilder();
         for (Activity activity : card.getActivities_message()){
             text.append("Sender : " + activity.getSender());
             text.append("\n");
             text.append(activity.getActivityText());
             text.append("\n\n");
         }
-        if (text.equals("")){
+        if (text.equals(null)){
             JOptionPane.showMessageDialog(null, "There is no message here"
                     ,"Show all messages", JOptionPane.INFORMATION_MESSAGE);
         }
@@ -835,18 +834,17 @@ public class User {
         PreparedStatement preparedStatement = connection.prepareStatement("select * from activities where card_id = ?");
         preparedStatement.setInt(1, card.getCardId());
         ResultSet resultSet = preparedStatement.executeQuery();
-        ArrayList<Activity> activities_temp = new ArrayList<>();
+        card.getActivities_message().clear();
         while (resultSet.next()){
             int activity_id = resultSet.getInt("activity_id");
             String sender = resultSet.getString("username");
             String text = resultSet.getString("text");
-
             Activity activity = new Activity(activity_id, sender, text);
-            activities_temp.add(activity);
+            card.getActivities_message().add(activity);
         }
 
         StringBuilder text = new StringBuilder();
-        for (Activity activity : activities_temp){
+        for (Activity activity : card.getActivities_message()){
             text.append("Activity ID : " + activity.getActivityId());
             text.append("\n");
             text.append("Sender : " + activity.getSender());
@@ -855,13 +853,16 @@ public class User {
             text.append("\n\n");
         }
 
-        System.out.println(text);
 
-        int numberToDelete = Integer.parseInt(JOptionPane.showInputDialog(null, "Enter id of message to delete", "Delete message", JOptionPane.QUESTION_MESSAGE));
-        preparedStatement = connection.prepareStatement("delete * from activities where activity_id = ?");
+        int numberToDelete = Integer.parseInt(JOptionPane.showInputDialog(null,
+                "Enter id of message to delete\n" + text, "delete message", JOptionPane.QUESTION_MESSAGE));
+
+        preparedStatement = connection.prepareStatement("delete from activities where" +
+                " activity_id = ?");
         preparedStatement.setInt(1, numberToDelete);
         preparedStatement.executeUpdate();
-        JOptionPane.showMessageDialog(null, "Your message deleted successfully", "Delete message", JOptionPane.INFORMATION_MESSAGE);
+        JOptionPane.showMessageDialog(null, "This message deleted successfully",
+                "delete message", JOptionPane.INFORMATION_MESSAGE);
     }
 
     public void editMessage(Card card) throws SQLException {

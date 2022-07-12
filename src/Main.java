@@ -42,7 +42,7 @@ public class Main {
                                                         while (isInWorkSpaces){
                                                             switch (Integer.parseInt(JOptionPane.showInputDialog(null,
                                                                     "1. Show details\n2. add boards\n3. show boards\n" +
-                                                                            "4. add members\n5. Back"))){
+                                                                            "4. add members\n5. Back", "show all boards", JOptionPane.QUESTION_MESSAGE))){
                                                                 case 1:
                                                                     currentUser.showDetailsOfWorkspaces(workSpace);
                                                                     break;
