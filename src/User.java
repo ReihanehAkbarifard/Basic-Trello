@@ -489,8 +489,8 @@ public class User {
             allLists.append(count + " - " + list.getName() + "\n");
             count++;
         }
-        int chosen = Integer.parseInt(JOptionPane.showInputDialog(null, "These are all your lists \n" +
-                        allLists + "Please enter the number to show more\n" ,
+        int chosen = Integer.parseInt(JOptionPane.showInputDialog(null, "These are all your lists" +
+                        "\nPlease enter the number to show more\n0. Back \n" + allLists  ,
                 "Show all lists", JOptionPane.INFORMATION_MESSAGE));
         return chosen;
     }
@@ -591,9 +591,10 @@ public class User {
         options.add("Back");
         options.add("Edit and Add sth");
         options.add("Move card");
+        options.add("Archive");
 
         int chosen = JOptionPane.showOptionDialog(null, allDetails + "\n",
-                "Show And Edit Card",
+                "Show Card",
                 JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options.toArray(), options.get(0));
         return chosen;
 
@@ -699,6 +700,96 @@ public class User {
 
 
     }
+    public void archive(WorkSpace workSpace, Board board, List list ,Card card) throws SQLException {
+        Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/trello?autoReconnect=true&useSSL=false",
+                "root", "");
+        PreparedStatement preparedStatement = connection.prepareStatement("update cards set " +
+                "orglist_id = ? where card_id = ?");
+        preparedStatement.setInt(1, list.getListId());
+        preparedStatement.setInt(2, card.getCardId());
+        preparedStatement.executeUpdate();
 
-    
+        preparedStatement = connection.prepareStatement("update cards set " +
+                "list_id = ? where list_id = ?");
+        preparedStatement.setInt(1, 0);
+        preparedStatement.setInt(2, list.getListId());
+        preparedStatement.executeUpdate();
+
+        preparedStatement = connection.prepareStatement("insert into archive (workspace_id, " +
+                "board_id, list_id, card_id) values(?, ?, ?, ?)");
+        preparedStatement.setInt(1, workSpace.getPrimaryKey());
+        preparedStatement.setInt(2, board.getBoardId());
+        preparedStatement.setInt(3, list.getListId());
+        preparedStatement.setInt(4, card.getCardId());
+        preparedStatement.executeUpdate();
+        list.getCards().remove(card);
+        JOptionPane.showMessageDialog(null, "card archived successfully",
+                "Archive", JOptionPane.INFORMATION_MESSAGE);
+
+
+    }
+
+
+    public int showArchives(Board board) throws SQLException {
+        Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/trello?autoReconnect=true&useSSL=false",
+                "root", "");
+        PreparedStatement preparedStatement = connection.prepareStatement("select * from cards" +
+                " where list_id = ?");
+        preparedStatement.setInt(1, 0);
+        ResultSet resultSet = preparedStatement.executeQuery();
+        StringBuilder allArchives = new StringBuilder();
+        board.getArchives().clear();
+        while (resultSet.next()){
+            Card card = new Card(resultSet.getString("cardname"),
+                    resultSet.getInt("card_id"), resultSet.getInt("orglist_id"));
+            board.getArchives().add(card);
+        }
+        int count = 1;
+        for (Card card : board.getArchives()){
+            allArchives.append(count + " - " + card.getTitle() + "\n");
+            count++;
+        }
+        int index = Integer.parseInt(JOptionPane.showInputDialog(null, "These are all Your archive cards :\n"
+                + "0 - Back\n"+ allArchives, "Archives cards", JOptionPane.QUESTION_MESSAGE));
+        return index;
+
+    }
+    public void backToList(Card card, List list, Board board) throws SQLException {
+        Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/trello?autoReconnect=true&useSSL=false",
+                "root", "");
+        PreparedStatement preparedStatement = connection.prepareStatement("update cards set "+
+                "list_id = ? where card_id = ?");
+        preparedStatement.setInt(1, card.getOrgListId());
+        preparedStatement.setInt(2, card.getCardId());
+        preparedStatement.executeUpdate();
+        JOptionPane.showMessageDialog(null, "Your card is restored",
+                "restore card", JOptionPane.INFORMATION_MESSAGE);
+//        connection.prepareStatement("select * from cards where card_id = ? ");
+//        preparedStatement.setInt(1, card.getCardId());
+//        ResultSet resultSet = preparedStatement.executeQuery();
+//        String name = resultSet.getString("cardname");
+//        int cardId = resultSet.getInt("card_id");
+//        int listId = resultSet.getInt("list_id");
+//        String description = resultSet.getString("description");
+//        String label = resultSet.getString("label");
+//        String deadline = resultSet.getString("deadline");
+//        Card cardReturn = new Card(name, cardId, description, label);
+//
+//        list.getCards().add(cardReturn);
+        board.getArchives().remove(card);
+
+
+    }
+    public void deleteCard(Card card, Board board) throws SQLException {
+        Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/trello?autoReconnect=true&useSSL=false",
+                "root", "");
+        PreparedStatement preparedStatement = connection.prepareStatement("delete from cards where " +
+                "card_id = ?");
+        preparedStatement.setInt(1, card.getCardId());
+        preparedStatement.executeUpdate();
+        JOptionPane.showMessageDialog(null, "Your card is deleted",
+                "delete card", JOptionPane.INFORMATION_MESSAGE);
+        board.getArchives().remove(card);
+
+    }
 }

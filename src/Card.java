@@ -5,6 +5,7 @@ public class Card {
     private int cardId;
     private String description;
     private String label;
+    private int orgListId;
     ArrayList<Activity> activities_message = new ArrayList<>();
 
     public Card(String title,int cardId, String description, String label) {
@@ -12,6 +13,12 @@ public class Card {
         this.cardId = cardId;
         this.description = description;
         this.label = label;
+    }
+
+    public Card(String title, int cardId, int orgListId) {
+        this.title = title;
+        this.cardId = cardId;
+        this.orgListId = orgListId;
     }
 
     public int getCardId() {
@@ -44,5 +51,21 @@ public class Card {
 
     public void setLabel(String label) {
         this.label = label;
+    }
+
+    public int getOrgListId() {
+        return orgListId;
+    }
+
+    public void setOrgListId(int orgListId) {
+        this.orgListId = orgListId;
+    }
+
+    public ArrayList<Activity> getActivities_message() {
+        return activities_message;
+    }
+
+    public void setActivities_message(ArrayList<Activity> activities_message) {
+        this.activities_message = activities_message;
     }
 }

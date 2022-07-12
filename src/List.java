@@ -3,7 +3,7 @@ import java.util.ArrayList;
 public class List {
     private String name;
     private int listId;
-    private ArrayList<Card>  cards = new ArrayList<>();
+    private ArrayList<Card> cards = new ArrayList<>();
 
     public List(String name, int listId) {
         this.name = name;

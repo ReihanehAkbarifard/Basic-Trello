@@ -62,56 +62,93 @@ public class Main {
                                                                                 boolean isInBoard = true;
                                                                                 while (isInBoard) {
                                                                                     switch (Integer.parseInt(JOptionPane.showInputDialog(null,
-                                                                                            "1. show all lists\n2. add new list\n3. Back"))) {
+                                                                                            "1. show all lists\n2. add new list\n3. archives\n4. Back",
+                                                                                            "show all lists", JOptionPane.QUESTION_MESSAGE))) {
                                                                                         case 1:
                                                                                             index = currentUser.showAllLists(board);
-                                                                                            List list = board.getLists().get(index - 1);
-                                                                                            Boolean isInList = true;
-                                                                                            while (isInList) {
-                                                                                                switch (Integer.parseInt(JOptionPane.showInputDialog(null,
-                                                                                                        "Please Choose an option :\n1. show all cards\n" +
-                                                                                                                "2. add new card\n3. Back", "All lists",
-                                                                                                        JOptionPane.QUESTION_MESSAGE))) {
-                                                                                                    case 1:
-                                                                                                        Boolean isInCard = true;
-                                                                                                        while (isInCard) {
-                                                                                                            index = currentUser.showAllCards(list);
-                                                                                                            if (index != 0) {
-                                                                                                                Card card = list.getCards().get(index - 1);
-                                                                                                                index = currentUser.showCard(card);
-                                                                                                                switch (index){
-                                                                                                                    case 0:
-                                                                                                                        break;
-                                                                                                                    case 1:
-                                                                                                                        currentUser.editAndAddToCard(card);
-                                                                                                                        break;
-                                                                                                                    case 2:
-                                                                                                                        currentUser.moveCard(board, card);
-                                                                                                                        break;
+                                                                                            switch (index) {
+                                                                                                case 0:
+                                                                                                    break;
+                                                                                                default:
+                                                                                                    List list = board.getLists().get(index - 1);
+                                                                                                    Boolean isInList = true;
+                                                                                                    while (isInList) {
+                                                                                                        switch (Integer.parseInt(JOptionPane.showInputDialog(null,
+                                                                                                                "Please Choose an option :\n1. show all cards\n" +
+                                                                                                                        "2. add new card\n3. Back", "All lists",
+                                                                                                                JOptionPane.QUESTION_MESSAGE))) {
+                                                                                                            case 1:
+                                                                                                                Boolean isInCard = true;
+                                                                                                                while (isInCard) {
+                                                                                                                    index = currentUser.showAllCards(list);
+                                                                                                                    if (index != 0) {
+                                                                                                                        Card card = list.getCards().get(index - 1);
+                                                                                                                        index = currentUser.showCard(card);
+                                                                                                                        switch (index) {
+                                                                                                                            case 0:
+                                                                                                                                break;
+                                                                                                                            case 1:
+                                                                                                                                currentUser.editAndAddToCard(card);
+                                                                                                                                break;
+                                                                                                                            case 2:
+                                                                                                                                currentUser.moveCard(board, card);
+                                                                                                                                break;
+                                                                                                                            case 3:
+                                                                                                                                currentUser.archive(workSpace, board, list, card);
+                                                                                                                                break;
 
+                                                                                                                        }
+
+                                                                                                                    } else {
+                                                                                                                        break;
+                                                                                                                    }
                                                                                                                 }
-
-                                                                                                            } else {
                                                                                                                 break;
-                                                                                                            }
+                                                                                                            case 2:
+                                                                                                                currentUser.addCard(list);
+                                                                                                                break;
+                                                                                                            case 3:
+                                                                                                                isInList = false;
+                                                                                                                break;
+
+
                                                                                                         }
-                                                                                                        break;
-                                                                                                    case 2:
-                                                                                                        currentUser.addCard(list);
-                                                                                                        break;
-                                                                                                    case 3:
-                                                                                                        isInList = false;
-                                                                                                        break;
+                                                                                                    }
 
-
-                                                                                                }
                                                                                             }
-//
                                                                                             break;
                                                                                         case 2:
                                                                                             currentUser.addLists(board);
                                                                                             break;
                                                                                         case 3:
+                                                                                            Boolean inArchive = true;
+                                                                                            while (inArchive) {
+                                                                                                int optArchive = currentUser.showArchives(board);
+                                                                                                if (optArchive == 0){
+                                                                                                    inArchive = false;
+                                                                                                    break;
+                                                                                                }
+                                                                                                else {
+                                                                                                    int chooseOpt = Integer.parseInt(JOptionPane.showInputDialog(null,
+                                                                                                            "Please choose an option :\n0. back\n1. delete\n2. return to list",
+                                                                                                            "Archive", JOptionPane.QUESTION_MESSAGE));
+                                                                                                    Card cardInArchive = board.getArchives().get(optArchive - 1);
+                                                                                                    switch (chooseOpt) {
+                                                                                                        case 0:
+                                                                                                            break;
+                                                                                                        case 1:
+                                                                                                            currentUser.deleteCard(cardInArchive, board);
+                                                                                                            break;
+                                                                                                        case 2:
+//                                                                                                            currentUser.backToList(cardInArchive,);
+                                                                                                            break;
+
+                                                                                                    }
+                                                                                                }
+                                                                                            }
+
+                                                                                            break;
+                                                                                        case 4:
                                                                                             isInBoard = false;
                                                                                             break;
                                                                                     }

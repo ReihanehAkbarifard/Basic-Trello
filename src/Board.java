@@ -6,6 +6,7 @@ public class Board {
     private ArrayList<User> guests = new ArrayList<>();
     private ArrayList<User> admins = new ArrayList<>();
     private ArrayList<List> lists = new ArrayList<>();
+    private ArrayList<Card> archives = new ArrayList<>();
 
     public Board(String title, int boardId) {
         this.title = title;
@@ -50,5 +51,13 @@ public class Board {
 
     public void setLists(ArrayList<List> lists) {
         this.lists = lists;
+    }
+
+    public ArrayList<Card> getArchives() {
+        return archives;
+    }
+
+    public void setArchives(ArrayList<Card> archives) {
+        this.archives = archives;
     }
 }
