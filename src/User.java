@@ -389,30 +389,44 @@ public class User {
                 "Type : " + workSpace.getType() + "\n" + allMembers);
     }
     public void addMembersToWorkSpace(WorkSpace workSpace) throws SQLException {
-        Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/trello?autoReconnect=true&useSSL=false", "root", "");
-        String useridToAdd = JOptionPane.showInputDialog(null, "Please enter the user id which " +
-                "you want to add :", "Add Member", JOptionPane.QUESTION_MESSAGE);
-        PreparedStatement preparedStatement = connection.prepareStatement("select primarykey" +
-                " from users where username = ?");
-        preparedStatement.setString(1, useridToAdd);
-        ResultSet resultSet = preparedStatement.executeQuery();
-        int userid = 0;
-        if(resultSet.next()){
-            userid = resultSet.getInt(1);
-        }
-        preparedStatement = connection.prepareStatement("insert into connectionbetweenuserandworkspace values(?, ?, ?)");
-        if(userid != 0){
-            preparedStatement.setInt(1, userid);
-            preparedStatement.setInt(2, workSpace.getPrimaryKey());
-            preparedStatement.setString(3, "Member");
-            preparedStatement.executeUpdate();
-            JOptionPane.showMessageDialog(null, "User was added to workspace!",
-                    "Add Member", JOptionPane.INFORMATION_MESSAGE);
 
-        }
-        else {
-            JOptionPane.showMessageDialog(null, "User not found!",
-                    "Add Member", JOptionPane.INFORMATION_MESSAGE);
+        Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/trello?autoReconnect=true&useSSL=false"
+                , "root", "");
+        PreparedStatement preparedStatement = connection.prepareStatement("select role from " +
+                " connectionbetweenuserandworkspace where primarykeyuser = ? and primarykeyworkspace = ?");
+        preparedStatement.setInt(1, getPrimaryKey());
+        preparedStatement.setInt(2, workSpace.getPrimaryKey());
+        ResultSet resultSet = preparedStatement.executeQuery();
+        if(resultSet.next()) {
+            if (!resultSet.getString("role").equals("Admin")) {
+                JOptionPane.showMessageDialog(null, "You are not allowed to " +
+                                "add member \nbecause you are not admin !",
+                        "Add Member", JOptionPane.INFORMATION_MESSAGE);
+            } else {
+                String useridToAdd = JOptionPane.showInputDialog(null, "Please enter the user id which " +
+                        "you want to add :", "Add Member", JOptionPane.QUESTION_MESSAGE);
+                preparedStatement = connection.prepareStatement("select primarykey" +
+                        " from users where username = ?");
+                preparedStatement.setString(1, useridToAdd);
+                resultSet = preparedStatement.executeQuery();
+                int userid = 0;
+                if (resultSet.next()) {
+                    userid = resultSet.getInt(1);
+                }
+                preparedStatement = connection.prepareStatement("insert into connectionbetweenuserandworkspace values(?, ?, ?)");
+                if (userid != 0) {
+                    preparedStatement.setInt(1, userid);
+                    preparedStatement.setInt(2, workSpace.getPrimaryKey());
+                    preparedStatement.setString(3, "Member");
+                    preparedStatement.executeUpdate();
+                    JOptionPane.showMessageDialog(null, "User was added to workspace!",
+                            "Add Member", JOptionPane.INFORMATION_MESSAGE);
+
+                } else {
+                    JOptionPane.showMessageDialog(null, "User not found!",
+                            "Add Member", JOptionPane.INFORMATION_MESSAGE);
+                }
+            }
         }
 
     }
