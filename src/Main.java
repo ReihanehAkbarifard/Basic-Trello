@@ -97,20 +97,27 @@ public class Main {
                                                                                                                                 currentUser.archive(workSpace, board, list, card);
                                                                                                                                 break;
                                                                                                                             case 4:
-                                                                                                                                switch (Integer.parseInt(JOptionPane.showInputDialog(null, "Chose an option\n" +
-                                                                                                                                        "1. Show all messages\2 2. Add message\n 3. Edit Message\n 4. Delete message", "Message", JOptionPane.QUESTION_MESSAGE))){
-                                                                                                                                    case 1:
-                                                                                                                                        currentUser.showAllMessages(card);
-                                                                                                                                        break;
-                                                                                                                                    case 2:
-                                                                                                                                        currentUser.sendMessage(card, currentUser);
-                                                                                                                                        break;
-                                                                                                                                    case 3:
-                                                                                                                                        currentUser.editMessage(currentUser);
-                                                                                                                                        break;
-                                                                                                                                    case 4:
-                                                                                                                                        currentUser.deleteMessage(currentUser);
-                                                                                                                                        break;
+                                                                                                                                Boolean isInMessage = true;
+                                                                                                                                while (isInMessage) {
+                                                                                                                                    switch (Integer.parseInt(JOptionPane.showInputDialog(null, "Chose an option :\n" +
+                                                                                                                                            "0. Back\n1. Show all messages\n2. Add message\n3. Edit Message\n4. Delete message", "Message", JOptionPane.QUESTION_MESSAGE))) {
+                                                                                                                                        case 0:
+                                                                                                                                            isInMessage = false;
+                                                                                                                                            break;
+                                                                                                                                        case 1:
+                                                                                                                                            currentUser.showAllMessages(card);
+                                                                                                                                            break;
+                                                                                                                                        case 2:
+                                                                                                                                            currentUser.sendMessage(card, currentUser);
+                                                                                                                                            break;
+                                                                                                                                        case 3:
+                                                                                                                                            currentUser.editMessage(card);
+                                                                                                                                            break;
+                                                                                                                                        case 4:
+                                                                                                                                            currentUser.deleteMessage(card);
+                                                                                                                                            break;
+                                                                                                                                    }
+
                                                                                                                                 }
                                                                                                                         }
 

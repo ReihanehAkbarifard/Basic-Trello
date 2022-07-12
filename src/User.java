@@ -765,18 +765,6 @@ public class User {
         preparedStatement.executeUpdate();
         JOptionPane.showMessageDialog(null, "Your card is restored",
                 "restore card", JOptionPane.INFORMATION_MESSAGE);
-//        connection.prepareStatement("select * from cards where card_id = ? ");
-//        preparedStatement.setInt(1, card.getCardId());
-//        ResultSet resultSet = preparedStatement.executeQuery();
-//        String name = resultSet.getString("cardname");
-//        int cardId = resultSet.getInt("card_id");
-//        int listId = resultSet.getInt("list_id");
-//        String description = resultSet.getString("description");
-//        String label = resultSet.getString("label");
-//        String deadline = resultSet.getString("deadline");
-//        Card cardReturn = new Card(name, cardId, description, label);
-//
-//        list.getCards().add(cardReturn);
         board.getArchives().remove(card);
 
 
@@ -793,17 +781,38 @@ public class User {
         board.getArchives().remove(card);
 
     }
-    public void showAllMessages(Card card){
-        if(card.getActivities_message().isEmpty()){
-            JOptionPane.showMessageDialog(null, "There is no message here", "Shoe message", JOptionPane.INFORMATION_MESSAGE);
-            return;
+    public void showAllMessages(Card card) throws SQLException {
+        Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/trello?autoReconnect=true&useSSL=false",
+                "root", "");
+        PreparedStatement preparedStatement = connection.prepareStatement("select * from activities where card_id = ?");
+        preparedStatement.setInt(1, card.getCardId());
+        ResultSet resultSet = preparedStatement.executeQuery();
+
+        card.getActivities_message().clear();
+        while (resultSet.next()){
+            String sender = resultSet.getString("username");
+            String text = resultSet.getString("text");
+            Activity activity = new Activity(sender, text);
+            card.getActivities_message().add(activity);
+
         }
-        StringBuilder allMessages = new StringBuilder();
+        System.out.println(card.getActivities_message().get(0).getSender());
+        StringBuilder text = new StringBuilder("");
         for (Activity activity : card.getActivities_message()){
-            allMessages.append(activity.getSender() + " : " + activity.getActivityText());
-            allMessages.append("\n");
+            text.append("Sender : " + activity.getSender());
+            text.append("\n");
+            text.append(activity.getActivityText());
+            text.append("\n\n");
         }
-        JOptionPane.showInputDialog(null, allMessages,"Show all messages", JOptionPane.QUESTION_MESSAGE);
+        if (text.equals("")){
+            JOptionPane.showMessageDialog(null, "There is no message here"
+                    ,"Show all messages", JOptionPane.INFORMATION_MESSAGE);
+        }
+        else {
+
+            JOptionPane.showMessageDialog(null, text,"Show all messages",
+                    JOptionPane.INFORMATION_MESSAGE);
+        }
     }
     public void sendMessage(Card card, User user) throws SQLException {
         String text = JOptionPane.showInputDialog(null, "Enter your message to send","Show all messages", JOptionPane.QUESTION_MESSAGE);
@@ -819,12 +828,12 @@ public class User {
         JOptionPane.showMessageDialog(null, "Your message added successfully", "Add message", JOptionPane.INFORMATION_MESSAGE);
     }
 
-    public void deleteMessage(User user) throws SQLException {
+    public void deleteMessage(Card card) throws SQLException {
 
         Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/trello?autoReconnect=true&useSSL=false",
                 "root", "");
-        PreparedStatement preparedStatement = connection.prepareStatement("select * from activities where username = ?");
-        preparedStatement.setString(1, user.getUserID());
+        PreparedStatement preparedStatement = connection.prepareStatement("select * from activities where card_id = ?");
+        preparedStatement.setInt(1, card.getCardId());
         ResultSet resultSet = preparedStatement.executeQuery();
         ArrayList<Activity> activities_temp = new ArrayList<>();
         while (resultSet.next()){
@@ -855,24 +864,23 @@ public class User {
         JOptionPane.showMessageDialog(null, "Your message deleted successfully", "Delete message", JOptionPane.INFORMATION_MESSAGE);
     }
 
-    public void editMessage(User user) throws SQLException {
+    public void editMessage(Card card) throws SQLException {
         Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/trello?autoReconnect=true&useSSL=false",
                 "root", "");
-        PreparedStatement preparedStatement = connection.prepareStatement("select * from activities where username = ?");
-        preparedStatement.setString(1, user.getUserID());
+        PreparedStatement preparedStatement = connection.prepareStatement("select * from activities where card_id = ?");
+        preparedStatement.setInt(1, card.getCardId());
         ResultSet resultSet = preparedStatement.executeQuery();
-        ArrayList<Activity> activities_temp = new ArrayList<>();
+        card.getActivities_message().clear();
         while (resultSet.next()){
             int activity_id = resultSet.getInt("activity_id");
             String sender = resultSet.getString("username");
             String text = resultSet.getString("text");
-
             Activity activity = new Activity(activity_id, sender, text);
-            activities_temp.add(activity);
+            card.getActivities_message().add(activity);
         }
 
         StringBuilder text = new StringBuilder();
-        for (Activity activity : activities_temp){
+        for (Activity activity : card.getActivities_message()){
             text.append("Activity ID : " + activity.getActivityId());
             text.append("\n");
             text.append("Sender : " + activity.getSender());
@@ -881,15 +889,16 @@ public class User {
             text.append("\n\n");
         }
 
-        System.out.println(text);
 
-        int numberToDelete = Integer.parseInt(JOptionPane.showInputDialog(null, "Enter id of message to edit", "Edit message", JOptionPane.QUESTION_MESSAGE));
-        String newText = JOptionPane.showInputDialog(null, "Enter your new message", "Edit message", JOptionPane.QUESTION_MESSAGE);
+        int numberToEdit = Integer.parseInt(JOptionPane.showInputDialog(null,
+                "Enter id of message to edit\n" + text, "Edit message", JOptionPane.QUESTION_MESSAGE));
+        String newText = JOptionPane.showInputDialog(null, "Enter your new message : " , "Edit message", JOptionPane.QUESTION_MESSAGE);
         preparedStatement = connection.prepareStatement("update activities set text = ? where activity_id = ?");
         preparedStatement.setString(1, newText);
-        preparedStatement.setInt(2, numberToDelete);
+        preparedStatement.setInt(2, numberToEdit);
         preparedStatement.executeUpdate();
-        JOptionPane.showMessageDialog(null, "The message updated successfully", "Edit message", JOptionPane.INFORMATION_MESSAGE);
+        JOptionPane.showMessageDialog(null, "This message updated successfully",
+                "Edit message", JOptionPane.INFORMATION_MESSAGE);
 
 
     }
