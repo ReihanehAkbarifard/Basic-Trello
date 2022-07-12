@@ -754,7 +754,7 @@ public class User {
         return index;
 
     }
-    public void backToList(Card card, List list, Board board) throws SQLException {
+    public void backToList(Card card, Board board) throws SQLException {
         Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/trello?autoReconnect=true&useSSL=false",
                 "root", "");
         PreparedStatement preparedStatement = connection.prepareStatement("update cards set "+

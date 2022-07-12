@@ -140,7 +140,7 @@ public class Main {
                                                                                                             currentUser.deleteCard(cardInArchive, board);
                                                                                                             break;
                                                                                                         case 2:
-//                                                                                                            currentUser.backToList(cardInArchive,);
+                                                                                                            currentUser.backToList(cardInArchive, board);
                                                                                                             break;
 
                                                                                                     }
