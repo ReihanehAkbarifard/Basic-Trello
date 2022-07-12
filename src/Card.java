@@ -6,7 +6,7 @@ public class Card {
     private String description;
     private String label;
     private int orgListId;
-    ArrayList<Activity> activities_message = new ArrayList<>();
+    private ArrayList<Activity> activities_message = new ArrayList<>();
 
     public Card(String title,int cardId, String description, String label) {
         this.title = title;
@@ -68,4 +68,5 @@ public class Card {
     public void setActivities_message(ArrayList<Activity> activities_message) {
         this.activities_message = activities_message;
     }
+
 }
