@@ -592,6 +592,7 @@ public class User {
         options.add("Edit and Add sth");
         options.add("Move card");
         options.add("Archive");
+        options.add("Message");
 
         int chosen = JOptionPane.showOptionDialog(null, allDetails + "\n",
                 "Show Card",
@@ -818,7 +819,7 @@ public class User {
         JOptionPane.showMessageDialog(null, "Your message added successfully", "Add message", JOptionPane.INFORMATION_MESSAGE);
     }
 
-    public void deleteMessage(Card card, User user) throws SQLException {
+    public void deleteMessage(User user) throws SQLException {
 
         Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/trello?autoReconnect=true&useSSL=false",
                 "root", "");
@@ -854,7 +855,7 @@ public class User {
         JOptionPane.showMessageDialog(null, "Your message deleted successfully", "Delete message", JOptionPane.INFORMATION_MESSAGE);
     }
 
-    public void editMessage(Card card, User user) throws SQLException {
+    public void editMessage(User user) throws SQLException {
         Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/trello?autoReconnect=true&useSSL=false",
                 "root", "");
         PreparedStatement preparedStatement = connection.prepareStatement("select * from activities where username = ?");
